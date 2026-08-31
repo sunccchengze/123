@@ -82,7 +82,7 @@ Since r_13 and r_23 decay with streamwise distance while r_12 does not, compleme
 
 ## 4. Numerical verification and the phase structure
 
-**Setup.** All simulations use FLORIS v4.6.6 with the GCH model (Gaussian velocity and deflection, Crespo-Hernández turbulence, sum-of-squares superposition), NREL 5 MW turbines, 8 m s⁻¹ inflow, TI = 0.06 unless stated, wind direction 270° (meteorological), yaw box [0°, 30°]. Mixed partials are central finite differences (h = 2.5–5°). The setup reproduces the validation numbers of our companion engineering project to the last digit: two turbines at 5D: 2190.39 kW baseline, 2368.40 kW at 25° (+8.13 %); 3×3 at 5D×3D: 8095.15 kW baseline, +14.87 % (row 1 yawed 30°), +22.73 % (rows 1–2), +24.04 % (per-row [30,20,0]°), so the structures we report are those of the standard engineering model.
+**Setup.** All simulations use FLORIS v4.6.6 with the GCH model (Gaussian velocity and deflection, Crespo-Hernández turbulence, sum-of-squares superposition), NREL 5 MW turbines, 8 m s⁻¹ inflow, TI = 0.06 unless stated, wind direction 270° (meteorological), yaw box [0°, 30°]. Mixed partials and Hessians are central finite differences (h = 5°). The setup reproduces the validation numbers of our companion engineering project to the last digit: two turbines at 5D: 2190.39 kW baseline, 2368.40 kW at 25° (+8.13 %); 3×3 at 5D×3D: 8095.15 kW baseline, +14.87 % (row 1 yawed 30°), +22.73 % (rows 1–2), +24.04 % (per-row [30,20,0]°), so the structures we report are those of the standard engineering model.
 
 **4.1 Two-turbine and three-turbine chains.** Table 1: the two-turbine mixed partial is non-positive throughout, and its magnitude follows the A-channel law A ∝ sin γ₂ cos^{p−1}γ₂ ṽ₂²(γ₁) r_12(γ₁): zero at γ₂ = 0, still ≈ 0 at (0, 10)° (where the recovery sensitivity r_12(0) vanishes for the cos^p deficit shape), then −0.362 at (20, 20)° and back to −0.081 at (30, 20)°, where the upstream wake has largely recovered (all values kW/deg², central differences h = 5°, FLORIS v4.6.6 GCH, 8 m/s, TI 0.06, wd 270°). For the three-turbine chain, M_13 and M_23 (pairs whose downstream member has no further beneficiaries) are negative everywhere; M_12 flips sign with the operating point: +0.674 kW/deg² at the origin (complementarity through the shared turbine 3 dominates), −0.215 at (20°,20°,20°) (substitution dominates), +0.058 at the near-optimal [30,20,0]°. The flip is the predicted two-channel competition.
 
@@ -189,7 +189,7 @@ Environment: FLORIS 4.6.6 (pip), Python 3.11, default_inputs.yaml (NREL 5MW, GCH
 - `exp_experiments2.py`: 12-layout greedy-vs-SLSQP certificate benchmark (mean gap 0.103 %, max 0.477 %; seed 42).
 - `analytic_3chain.py`: closed-form C − S decomposition for the three-turbine chain.
 
-Finite differences: central, h = 2.5° (Hessians) or 5° (sign matrices); corner points with negative rotor velocities excluded (FLORIS warning).
+Finite differences: central, h = 5° throughout; corner points with negative rotor velocities excluded (FLORIS warning).
 
 ## Appendix C. Novelty audit (search log, 2026-08-30)
 
