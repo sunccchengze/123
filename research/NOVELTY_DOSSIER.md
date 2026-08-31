@@ -42,8 +42,8 @@
 - 项目脚本 confirm 配置一致（generate_data.py / generate_array_data.py）。
 
 ## 论文二/三 算法侧审计（2026-08-30 补充）
-- `"coordinate descent" OR "Jacobi" OR "parallel" yaw optimization` → 命中 **Liu et al. 2020, Energies 13(4):865 (WGWD)**：几何尾流重叠加权图解耦 + 并行随机搜索。→ 与我方区别：权重是几何重叠而非目标函数混合偏导；子求解器是无证书随机搜索；无符号区分。已在 Paper 2 正面引用并区分。
-- `wind farm power tracking yaw inverse bisection monotonic` → 命中 APC 文献（Bossanyi & Ruisi 2025, WES 10:2705：yaw/induction setpoint 查表 + PI 闭环；Quick 2021 setpoint uncertainty）。→ 均无逆映射单调性结构分析/精确反演。已在 Paper 3 引用并区分。
+- `"coordinate descent" OR "Jacobi" OR "parallel" yaw optimization` → 命中 **Kuo et al. 2020, Energies 13(4):865 (WGWD)**：几何尾流重叠加权图解耦 + 并行随机搜索。→ 与我方区别：权重是几何重叠而非目标函数混合偏导；子求解器是无证书随机搜索；无符号区分。已在 Paper 2 正面引用并区分。
+- `wind farm power tracking yaw inverse bisection monotonic` → 命中 APC 文献（Tamaro et al. 2025, WES 10:2705：yaw/induction setpoint 查表 + PI 闭环；Quick 2021 setpoint uncertainty）。→ 均无逆映射单调性结构分析/精确反演。已在 Paper 3 引用并区分。
 - 并行坐标下降/坐标下降理论（Richtárik & Takáč; Wright 2015）为通用算法基座，作为方法学引用，不构成创新点冲突。
 
 ## 终局复核（2026-08-30，成稿后第三轮）

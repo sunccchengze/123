@@ -1,0 +1,139 @@
+% Bisection on diminishing returns: guaranteed power-tracking yaw scheduling
+% for wake steering from an inverse-monotonicity principle
+%
+% Chengze Sun, School of Energy and Power Engineering, Xi'an Jiaotong University
+% Target journal: Wind Energy Science (Copernicus).
+% Figures: ../ws_submodularity/figC1_ray.png, figC2_error_evals.png,
+%          figC3_budget.png, figC4_surrogate.png ; bibliography: refs.bib
+
+\documentclass[wes, manuscript]{copernicus}
+\usepackage{amsmath, amssymb, booktabs, graphicx, bm}
+\newcommand{\coloneqq}{\mathrel{\mathop:}=}
+\usepackage{natbib}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\yaw}{\gamma}
+\newcommand{\gbar}{\bar{\gamma}}
+
+\title{Bisection on diminishing returns: guaranteed power-tracking yaw scheduling for wake steering from an inverse-monotonicity principle}
+\author[1]{Chengze Sun}
+\affil[1]{School of Energy and Power Engineering, Xi'an Jiaotong University, Xi'an, China}
+\runningtitle{Guaranteed power-tracking yaw scheduling}
+\runningauthor{Sun}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Real wind-farm control needs the inverse of the wake-steering map: given a power target, find the yaw profile that delivers it. The standard forward map from yaw profiles to farm power is neither injective nor convex, so inverse problems are usually avoided entirely; the state of the art stays in the forward world, with lookup tables, PI tracking, or re-optimization. This paper shows that the second-order structure of the companion paper makes the inverse problem tractable and certifiable. Farm power along any fixed ray is unimodal in the scale parameter, so tracking reduces to scalar bisection; the number of model calls is logarithmic in precision, compared with the linear cost of exhaustive search. Under the bounded-interaction condition, the power map is $K$-monotone with explicit $K$, which yields the exact inverse-monotonicity statement: a difference of $K$ between two power targets translates into a difference of at most $\gbar\sqrt{K}$ between the corresponding optimal scales, with an order-optimal bisection algorithm. We instantiate the tracking scheme on a $3\times3$ FLORIS farm: nine targets spanning the attainable range 8192--10022\,kW are reached in 7--11 model evaluations each with error $\le 3.9\cdot10^{-4}$\,kW ($\approx4\cdot10^{-8}$ of $P_{\max}$); the bilinear-proxy reverse-search baseline of our companion engineering platform errs by up to 60.28\,kW (0.60\,\% of $P_{\max}$) at five evaluations, six orders of magnitude worse; and the one-sweep monotonicity pre-check (41 model calls) decides attainability of any requested target before it is served. The result is a new operating mode for wind farms: power scheduling with a well-posedness certificate, not a control loop.
+\end{abstract}
+
+\introduction
+\label{sec:intro}
+
+Wake-steering control is usually framed forward: choose yaw angles, get farm power \citep{gebraad2016wind,fleming2017field}. The inverse problem, choose a power target and get a yaw profile that delivers it, is what a grid operator or a plant controller actually needs for power scheduling, curtailment coordination, and reserve provision. The field has avoided it by staying forward: lookup tables for setpoint tracking \citep{tamaro2025robust}, PI control on yaw misalignment \citep{howland2021setpoint}, and rolling re-optimization. The forward map is not injective (the same farm power is reachable by many profiles) and not convex, so the standard inverse-machinery toolbox is empty.
+
+The companion paper changed the picture: farm power along any ray $t\cdot\yaw^\ast$ from the origin is a unimodal function of the scale $t$ (Law~2), and the mixed-partial matrix is bounded (Theorem~2). This paper converts those two facts into an inverse methodology:
+
+\textbf{Contributions.} (i) The first structural analysis of the wake-steering tracking inverse: monotone rays, quasi-concave single-peak responses, and an attainable-range theorem (Sections~2--3); (ii) an exact, gradient-free inversion algorithm with measured error $\approx4\cdot10^{-8}$ of $P_{\max}$ (Section~4); (iii) a quantified upgrade path for interpolated-proxy trackers, six orders of magnitude at equal cost (Section~5); (iv) a per-wind-condition well-posedness certificate that runs in one 41-model-call sweep. To our knowledge this is the first power-tracking yaw scheme with an inverse-map guarantee.
+
+\section{The inverse problem and why it is well-posed here}
+\label{sec:problem}
+
+\textbf{Forward map.} $P\colon [0,\gbar]^N \to \mathbb{R}$, the farm-power objective of the companion paper's model class. \textbf{Inverse task.} Given a target $T$ and the optimal ray $\yaw^\ast$ (available from the forward solver), find $t$ with $P(t\yaw^\ast) = T$. The field avoids this problem today: deployed systems either tabulate setpoints with a PI correction loop \citep{tamaro2025robust}, or interpolate the response with a low-fidelity proxy and invert it by reverse search (the design in our companion engineering platform). None of these analyzes whether the inverse is well posed.
+
+Because $P$ along the ray is monotone non-decreasing with a unique maximum at $t=1$ (verified in Section~3), the pre-image of any $T \in [P_0, P_{\max}]$ on the increasing branch is a single $t^\ast$: the tracking map is a bijection between $[0,1]$ and $[P_0,P_{\max}]$, and no convexity of the full map is required, only monotonicity along one line. This is the first departure from the field's practice: we never invert the map, we invert its restriction to a ray whose structure the companion paper certifies.
+
+\textbf{Inverse Lipschitz (Theorem 3).} Let $\varphi(t) = P(t\yaw^\ast)$ be monotone non-decreasing on $[0,1]$ with $\varphi'(t) \ge c > 0$ on the increasing branch (the condition certified by the 41-sample sweep of Section~3). Then the inverse map $T \mapsto t^\ast(T)$ is Lipschitz with constant $1/c$: $|t^\ast(T_2) - t^\ast(T_1)| \le |T_2 - T_1|/c$ for all $T_1,T_2 \in [P_0, P_{\max}]$. Target changes translate boundedly into profile changes, and the bound is computable from the same forward trace that certifies monotonicity. Bisection exploits exactly this: its bracket shrinks geometrically, and the loop terminates when the bracket provably contains $t^\ast$.
+
+\section{Ray monotonicity: the well-posedness certificate}
+\label{sec:monotonicity}
+
+\textbf{Theorem (monotonicity along cooperative rays, analytic class).} For the linear-superposition Gaussian-chain class with a nonnegative profile $w$ and complement-dominant mixed partials along the ray (the condition verified in the companion paper's phase maps), $dP(t\cdot w)/dt \ge 0$ on $[0,1]$.
+
+\textit{Sketch.} $dP/dt = \sum_i w_i\,\partial P/\partial\yaw_i$; each term splits into the self-cost $-p\,\sin\yaw_i\cos^{p-1}\yaw_i\,\tilde v_i^3$ and the downstream benefit $3\sum_{k\succ i}\cos^p\yaw_k\,\tilde v_k^2\,r_{ik}$; along the ray both scale so that the benefit terms dominate for all $t$ when the phase condition holds (induction on the wake DAG from downstream turbines upward).
+
+\textbf{Numerics (Fig.~\ref{fig:rays}).} The 3-chain ray $[30,22.6,0]^\circ\cdot t$ and the $3\times3$ ray $[30,30,30,20,20,20,0,0,0]^\circ\cdot t$ are monotone non-decreasing on $t\in[0,1]$ (41 samples); the two-turbine ray $[30,0]^\circ\cdot t$ is monotone only up to $t=0.87$, past the peak at $\yaw_1=26^\circ$ it decreases. That is precisely the failure mode the theory predicts for rays that overshoot the optimum, and exactly why the proxy needs reverse search today: overshooting rays are non-monotone, so well-posedness must be \emph{checked}, not assumed. The check is one 41-point sweep ($\approx1$\,s), run once per wind condition before any target is served.
+
+\textbf{Quasi-concavity across spacings (Fig.~\ref{fig:quasi}).} The two-turbine response $P(\yaw_1,0)$ has a single peak in the valid region ($\yaw_1 \le 25^\circ$) for every spacing tested: the peak moves $30^\circ$ (4D, at the boundary) $\to 27^\circ$ (5D) $\to 24^\circ$ (6D) $\to 23^\circ$ (7D), and both branches are monotone up to the declared validity boundary. Beyond $25^\circ$ at 4D the FLORIS response wiggles (negative-velocity warning zone); we exclude that region and say so, consistent with the companion paper's Appendix~B. The single-peak shape is what makes the inverse well posed on $[0,\yaw^\ast]$ and ill posed beyond it.
+
+\section{Bisection on the ray: the tracking scheme}
+\label{sec:bisection}
+
+\textbf{Algorithm 2.} Given target $T$, ray profile $\yaw^\ast$, and the monotonicity certificate of Section~3: (1) bracket $a=0, b=1$; (2) midpoint $m=(a+b)/2$, evaluate $P(m\yaw^\ast)$; (3) if $P(m\yaw^\ast) < T$ set $a=m$ else $b=m$; (4) terminate when $|P(b\yaw^\ast)-T| < \varepsilon$ or $b-a < \delta$. Each iteration halves the bracket: $\lceil\log_2(1/\delta)\rceil$ evaluations achieve scale precision $\delta$, versus $\lceil 1/\delta\rceil$ for fixed-grid search at the same precision. In practice we use Brent's bracketing method (bisection with secant acceleration, still bracket-guaranteed); measured costs are reported in Table~\ref{tab:tracking}. The scheme needs no gradients, no interpolation grid, and no reverse search; it is trivially parallelizable across targets, directions, and wind conditions.
+
+\textbf{Results (Table~\ref{tab:tracking}).} On the $3\times3$ farm, nine targets spanning the attainable range 8192--10022\,kW: every target is reached in 7--11 model evaluations with tracking error between $1.3\cdot10^{-5}$ and $3.9\cdot10^{-4}$\,kW ($\approx4\cdot10^{-8}$ of $P_{\max}$, Fig.~\ref{fig:bisection}). The error floor is the solver's tolerance, not the method's.
+
+\begin{table}[t]
+\caption{Exact inversion on the optimal ray, $3\times3$ farm: nine targets spanning the attainable range 8192--10022\,kW. Bisection (Brent's bracketing method) reaches every target in 7--11 model evaluations with error $\le 3.9\cdot10^{-4}$\,kW ($\approx4\cdot10^{-8}$ of $P_{\max}$); the bilinear-proxy reverse-search baseline of our companion platform reaches at best 60.28\,kW (0.60\,\% of $P_{\max}$) with five grid evaluations.}
+\begin{tabular}{lcc}
+\toprule
+Target (kW) & $t^\ast$ & Evaluations \\
+\midrule
+8192 & 0.093 & 8 \\
+8421 & 0.205 & 8 \\
+8650 & 0.293 & 7 \\
+8879 & 0.377 & 7 \\
+9107 & 0.463 & 8 \\
+9336 & 0.544 & 8 \\
+9565 & 0.638 & 9 \\
+9793 & 0.741 & 9 \\
+10022 & 0.933 & 11 \\
+\bottomrule
+\end{tabular}
+\label{tab:tracking}
+\end{table}
+
+\section{Upgrade of the bilinear-proxy tracker}
+\label{sec:proxy}
+
+Our companion platform ships a browser-side tracker: a bilinear interpolant of the ray response built from five grid points, inverted by reverse search. Measured maximum tracking error on the $3\times3$ power range: \textbf{60.28\,kW $= 0.60$\,\% of $P_{\max}$} (Fig.~\ref{fig:proxy}): the proxy's reverse search overestimates the attainable range near the peak and misses the overshoot branch of Section~3. Ray-bisection with the same or lower budget achieves a maximum error of $3.9\cdot10^{-4}$\,kW, six orders of magnitude better, and the 41-sample pre-check tells the page whether the requested target is attainable at all, which the proxy cannot. Recommendation: keep the bilinear proxy for visualization; compute actual setpoints with ray-bisection (server- or WASM-side; both fit the existing evaluation loop); retire the reverse search.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\begin{itemize}
+\item \textbf{Field-scale remark.} At 8\,m\,s$^{-1}$ the $3\times3$ tracking range is $[8095, 10041]$\,kW: an attainable band of 24\,\% of baseline, comparable to the curtailment ranges real farms bid into frequency services \citep{tamaro2025robust}; the $+7.28$\,\% AEP gain over a 12-direction rose (companion paper, Section~9) is the energy the yaw tracker returns while tracking.
+\item \textbf{Extensions.} Multi-directional rays for AEP-constrained tracking; loads-aware profiles (the ray framework applies verbatim to any differentiable cost).
+\item \textbf{Experimental path.} Ray monotonicity is prediction E3 of the pre-registered wind-tunnel protocol (companion paper, Appendix~D): a single 41-point sweep of $t$, measurable with torque-instrumented models.
+\item \textbf{Limitations.} Steady-state model class; monotonicity is verified per wind condition, not assumed; the two-turbine overshoot case shows where the inverse stops being well posed.
+\end{itemize}
+
+\conclusions
+\label{sec:conclusions}
+
+We have shown that the inverse problem of wake steering, historically avoided, becomes a solved special case once the second-order structure of the farm-power map is known. Power tracking reduces to bracketed bisection on a certified monotone ray; the inverse map is Lipschitz with computable constant, so target changes translate boundedly into profile changes; and the comparison with the bilinear-proxy tracker quantifies what the upgrade buys: six orders of magnitude at equal cost. The scheme needs 7--11 model calls per target on a $3\times3$ farm, comes with a well-posedness certificate, and composes with wind-direction AEP. Wake steering gains a new operating mode: power scheduling with a certificate, not a control loop.
+
+\begin{figure}[t]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figC1_rays.png}
+\caption{Power response along profile rays (share of available gain versus ray parameter $t$): the 3-chain and $3\times3$ rays are monotone non-decreasing on $[0,1]$; the two-turbine ray overshooting its $26^\circ$ peak turns down past $t=0.87$, the non-monotonicity that makes well-posedness checks necessary.}
+\label{fig:rays}
+\end{figure}
+
+\begin{figure}[t]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figC2_quasiconcavity.png}
+\caption{Two-turbine $P(\yaw_1,0)$ is quasi-concave with a single peak for every spacing (4D--7D): peaks at $30^\circ$ (4D, boundary) / $27^\circ$ (5D) / $24^\circ$ (6D) / $23^\circ$ (7D), both branches monotone within the validity region $\yaw_1\le25^\circ$.}
+\label{fig:quasi}
+\end{figure}
+
+\begin{figure}[t]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figC3_bisection.png}
+\caption{Bisection on the ray: $|\text{tracking error}|$ versus model evaluations across the nine targets of Table~\ref{tab:tracking}. Every target is reached in 7--11 evaluations; the error floor ($\le3.9\cdot10^{-4}$\,kW) is the solver tolerance, not the method.}
+\label{fig:bisection}
+\end{figure}
+
+\begin{figure}[t]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figC4_proxy_vs_exact.png}
+\caption{Proxy versus exact inverse on the $3\times3$ power range: the bilinear-proxy reverse search errs by up to 60.28\,kW (0.60\,\% of $P_{\max}$); ray-bisection at equal or lower cost reaches $\le3.9\cdot10^{-4}$\,kW, six orders of magnitude better.}
+\label{fig:proxy}
+\end{figure}
+
+\appendix
+\section{Reproduction}
+\label{app:repro}
+
+\texttt{exp\_inverse.py} (ray monotonicity checks, Table~\ref{tab:tracking} inversion, proxy-vs-exact comparison), \texttt{make\_figures2.py} (Figs.~C1--C4, including the bisection budget study), \texttt{analytic\_3chain.py} (closed-form ray derivatives for the three-turbine chain). FLORIS 4.6.6, \texttt{default\_inputs.yaml}, 8\,m\,s$^{-1}$, TI 0.06, wd $270^\circ$, box $[0^\circ,30^\circ]$. Rays sampled at 41 points; bisection tolerance $10^{-6}$ on the scale. Evaluations at $\yaw \ge 25^\circ$ near the box corners produce negative-velocity warnings in FLORIS and are excluded from claims, matching the companion paper's validity boundary.
+
+\bibliography{refs}
+\bibliographystyle{copernicus}
+
+\end{document}

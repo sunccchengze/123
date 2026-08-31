@@ -4,3 +4,5 @@ __pycache__/
 *.npz
 *.npy
 *.log
+node_modules/
+research/tools/latex_wasm/vendor/
