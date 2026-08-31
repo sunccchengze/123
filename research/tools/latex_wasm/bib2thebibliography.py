@@ -53,8 +53,10 @@ def latex_escape(s):
     return s
 
 
-def main(bib_path):
+def main(bib_path, only_keys=None):
     entries = parse_bib(bib_path)
+    if only_keys:
+        entries = [e for e in entries if e[0] in only_keys]
     lines = ["\\begin{thebibliography}{99}"]
     n = 0
     for key, etype, f in entries:
@@ -93,6 +95,9 @@ def main(bib_path):
 
 
 if __name__ == '__main__':
-    out, n = main(sys.argv[1])
+    only = None
+    if len(sys.argv) > 2 and sys.argv[2].strip():
+        only = set(k.strip() for k in sys.argv[2].split(','))
+    out, n = main(sys.argv[1], only)
     sys.stderr.write(f"[bib2thebibliography] {n} entries\n")
     print(out)

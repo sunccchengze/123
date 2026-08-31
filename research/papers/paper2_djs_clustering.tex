@@ -50,15 +50,15 @@ We restate the three facts we build on. \textbf{Theorem 1 (C--S decomposition).}
 \textbf{Results (Table~1).} Line search on a $1^\circ$ grid (31 evaluations per turbine per sweep, deliberately unoptimized); SLSQP multi-start (4 starts) as reference; wall times on a single 2-core container, so absolute numbers are conservative and the comparison is what matters.
 
 \begin{table}[t]
-\caption{DJS versus multi-start SLSQP. Gaps are relative to the better of the two; sweeps counted until convergence ($\Delta P < 10^{-4}$\,kW).}
-\begin{tabular}{lccccc}
+\caption{DJS versus multi-start SLSQP. Gaps are relative to the better of the two; sweeps counted until convergence ($\Delta P < 10^{-4}$\,kW); wall times on one 2-core container (Table~1 values from the benchmark run, Fig.~\ref{fig:djs}b from the scaling run).}
+\begin{tabular}{lccccccc}
 \toprule
-Case & $N$ & SLSQP gain & DJS gain & gap & sweeps \\
+Case & $N$ & SLSQP gain & DJS gain & gap & sweeps & $t_{\mathrm{DJS}}$ & $t_{\mathrm{SLSQP}}$ \\
 \midrule
-3-chain & 3 & $+22.33$\,\% & $+22.33$\,\% & 0.0029\,\% & 3 \\
-$3\times3$ & 9 & $+24.12$\,\% & $+24.12$\,\% & 0.0044\,\% & 3 \\
-$4\times4$ & 16 & $+34.19$\,\% & $+34.19$\,\% & 0.0008\,\% & 3 \\
-rand16 & 16 & $+7.59$\,\% & $+7.61$\,\% & $-0.0230$\,\% & 4 \\
+3-chain & 3 & $+22.33$\,\% & $+22.33$\,\% & 0.0029\,\% & 3 & 9.0\,s & 3.4\,s \\
+$3\times3$ & 9 & $+24.13$\,\% & $+24.12$\,\% & 0.0044\,\% & 3 & 38.8\,s & 15.2\,s \\
+$4\times4$ & 16 & $+34.19$\,\% & $+34.19$\,\% & 0.0008\,\% & 3 & 89.3\,s & 35.5\,s \\
+rand16 & 16 & $+7.59$\,\% & $+7.61$\,\% & $-0.0230$\,\% & 4 & 137.7\,s & 62.0\,s \\
 \bottomrule
 \end{tabular}
 \label{tab:djs}

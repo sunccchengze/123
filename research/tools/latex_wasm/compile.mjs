@@ -122,10 +122,17 @@ async function main() {
     process.exit(2);
   }
 
-  // bibliography
+  // bibliography (only the keys actually cited in this paper)
   const bibPy = join(HERE, 'bib2thebibliography.py');
-  const bibBlock = execSync(`python3 ${bibPy} ${join(PAPERS, 'refs.bib')}`).toString();
-  console.error('[compile] bibliography entries injected');
+  const texSrc0 = readFileSync(texPath, 'utf8');
+  const cited = new Set();
+  for (const m of texSrc0.matchAll(/\\cite[pt]?(?:\[[^\]]*\])?\{([^}]+)\}/g)) {
+    for (const k of m[1].split(',')) cited.add(k.trim());
+  }
+  const bibBlock = execSync(
+    `python3 ${bibPy} ${join(PAPERS, 'refs.bib')} ${[...cited].join(',')}`
+  ).toString();
+  console.error(`[compile] bibliography: ${cited.size} cited keys injected`);
 
   // figures
   const figFiles = readdirSync(WS).filter(f => f.endsWith('.png'));
@@ -137,7 +144,7 @@ async function main() {
     extraBase.push({ path: '/ws_submodularity/' + f, b64: b64(join(WS, f)) });
   }
 
-  const source = preprocess(readFileSync(texPath, 'utf8'), bibBlock);
+  const source = preprocess(texSrc0, bibBlock);
   console.error('[compile] pass 1 ...');
   const p1 = await runPass({ source, extraFiles: extraBase, readBack: ['/input.aux'] });
   if (!p1.success) {
