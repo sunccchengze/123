@@ -34,7 +34,7 @@
 \maketitle
 
 \begin{abstract}
-Wake steering increases wind-farm power by yawing upstream turbines so that their wakes deflect away from downstream rows, and the field has accumulated a puzzle: sequential ``greedy'' heuristics, which sweep turbines from upstream to downstream, recover 99.4--99.9\,\% of the gains of continuous optimization, yet no approximation guarantee exists and the general yaw problem is strongly NP-hard. Fifteen years of serial-refine and Boolean-greedy practice have produced no explanation of this near-optimality, and no wind-tunnel or field campaign has ever estimated the second-order structure of farm power. The obstacle is conceptual: pairwise yaw interactions are neither purely substitutes nor purely complements, because yawing a downstream turbine erodes the value of yawing upstream while two turbines yawing together reinforce each other through their shared downstream beneficiaries, and the balance between the two channels depends on the operating point. We resolve the puzzle by analyzing the second-order structure of the objective $P(\yaw)$. Every mixed partial decomposes into a complementarity channel and a substitution channel, whose sign is decided by the wake-interaction DAG and the operating point (Theorem~1); from the decomposition follow a bounded-interaction greedy bound (Theorem~2), a decoupling law at power-maximizing profiles (Law~1), and monotone comparative statics for the optimal profiles. On FLORIS, serial pairs are strategic substitutes, lateral pairs with shared beneficiaries are strategic complements, and chain pairs undergo a complement-to-substitute phase flip ($+0.674$\,kW\,deg$^{-2}$ at the origin to $-0.215$\,kW\,deg$^{-2}$ at $(20^\circ,20^\circ,20^\circ)$); the off-diagonal-to-diagonal Hessian ratio drops from 0.27--0.97 at generic points to 0.022--0.068 at optima across $3\times3$, $4\times4$, misaligned, and AEP cases; upstream-to-downstream greedy achieves a mean optimality gap of 0.103\,\% (max 0.477\,\%) over 12 random layouts; and the structure survives the LES-calibrated (\emph{cc}) and field-calibrated (\emph{empirical Gauss}) model families. A pre-registered wind-tunnel protocol for measuring the three falsifiable predictions is provided (Appendix~D).
+Wake steering increases wind-farm power by yawing upstream turbines so that their wakes deflect away from downstream rows, and the field has accumulated a puzzle: sequential ``greedy'' heuristics, which sweep turbines from upstream to downstream, recover 99.4--99.9\,\% of the gains of continuous optimization, yet no approximation guarantee exists and the general yaw problem is strongly NP-hard. Fifteen years of serial-refine and Boolean-greedy practice have produced no explanation of this near-optimality, and no wind-tunnel or field campaign has ever estimated the second-order structure of farm power. The obstacle is conceptual: pairwise yaw interactions are neither purely substitutes nor purely complements, because yawing a downstream turbine erodes the value of yawing upstream while two turbines yawing together reinforce each other through their shared downstream beneficiaries, and the balance between the two channels depends on the operating point. We resolve the puzzle by analyzing the second-order structure of the objective $P(\yaw)$. Every mixed partial decomposes into a complementarity channel and a substitution channel, whose sign is decided by the wake-interaction DAG and the operating point (Theorem~1); from the decomposition follow a bounded-interaction greedy bound (Theorem~2), a decoupling law at power-maximizing profiles (Law~1), and monotone comparative statics for the optimal profiles. On FLORIS, serial pairs are strategic substitutes, lateral pairs with shared beneficiaries are strategic complements, and chain pairs undergo a complement-to-substitute phase flip ($+0.674$\,kW\,deg$^{-2}$ at the origin to $-0.215$\,kW\,deg$^{-2}$ at $(20^\circ,20^\circ,20^\circ)$); the off-diagonal-to-diagonal Hessian ratio drops from 0.22--0.87 at generic points to 0.008--0.069 at optima across $3\times3$, $4\times4$, misaligned, and AEP cases; upstream-to-downstream greedy achieves a mean optimality gap of 0.103\,\% (max 0.477\,\%) over 12 random layouts; and the structure survives the LES-calibrated (\emph{cc}) and field-calibrated (\emph{empirical Gauss}) model families. A pre-registered wind-tunnel protocol for measuring the three falsifiable predictions is provided (Appendix~D).
 \end{abstract}
 
 \introduction
@@ -48,7 +48,7 @@ This paper provides the missing structural analysis. Rather than studying optimi
 
 \begin{enumerate}
 \item \textbf{Interaction decomposition (Theorem~1).} $\partial^2 P/\partial\yaw_i\partial\yaw_j = B_{ij} - A_{ij}$, with $B_{ij}\ge 0$ a sum of positive contributions from turbines downstream of both $i$ and $j$, and $A_{ij}\ge 0$ a substitution term active only when $j$ is downstream of $i$. Serial pairs are substitutes; lateral pairs with common downstream turbines are complements; chain-adjacent pairs flip sign along a phase boundary we compute.
-\item \textbf{Decoupling at the optimum (Law~1).} At power-maximizing profiles the Hessian is nearly diagonal (off-diagonal/diagonal norm ratio 0.02--0.07, versus 0.27--0.97 elsewhere). The optimum is a point of maximal interactional decoupling; the problem becomes locally separable exactly where we most want it to.
+\item \textbf{Decoupling at the optimum (Law~1).} At power-maximizing profiles the Hessian is nearly diagonal (off-diagonal/diagonal norm ratio 0.008--0.069, versus 0.22--0.87 elsewhere). The optimum is a point of maximal interactional decoupling; the problem becomes locally separable exactly where we most want it to.
 \item \textbf{Bounded-interaction greedy guarantees (Theorem~2).} The greedy upstream-to-downstream sweep is optimal to within an explicit bound in the interaction energy, explaining the empirical gaps (mean 0.103\,\%, max 0.477\,\% over 12 random layouts) and Stanley et al.'s 0.6\,\%.
 \end{enumerate}
 
@@ -168,17 +168,17 @@ At power-maximizing yaw profiles, the interaction matrix is nearly diagonal: $\n
 Table~2 reports the off-diagonal-to-diagonal Frobenius ratio across our case set.
 
 \begin{table}[t]
-\caption{Off-diagonal-to-diagonal Hessian ratio $\norm{M_{\mathrm{off}}}/\norm{\operatorname{diag}(M)}$ at the optimum versus generic points. The drop is an order of magnitude in every case with an interior optimum; the random weak-benefit case is the only one without a drop.}
+\caption{Off-diagonal-to-diagonal Hessian ratio $\norm{M_{\mathrm{off}}}/\norm{\operatorname{diag}(M)}$ (Frobenius norms, central differences, $h=5^\circ$) at the optimum (four-start SLSQP) versus generic points ($\yaw=0$ and $\yaw=20^\circ$). The drop is 7--70$\times$ in every case with an interior optimum; the random weak-benefit case (gain $+0.21$\,\%) is the only one without a drop. The Section~9 sign-matrix study at DJS optima gives 0.020 (gauss) and 0.116 (cc) for the same $3\times3$ farm, consistent within optimizer differences.}
 \begin{tabular}{lccc}
 \toprule
 Case & at optimum & at $\yaw=0$ & at $\yaw=20^\circ$ \\
 \midrule
-$3\times3$, wd $270^\circ$ & \textbf{0.023} & 0.360 & 0.404 \\
-$3\times3$, wd $300^\circ$ & \textbf{0.022} & 0.266 & 0.648 \\
-3-chain & \textbf{0.030} & 0.349 & 0.170 \\
-$4\times4$, wd $270^\circ$ & \textbf{0.055} & 0.521 & n/a \\
-$3\times3$, AEP over 12 directions & \textbf{0.068} & 0.966 & n/a \\
-6-turbine random (weak benefit) & 0.174 & 0.181 & 0.334 \\
+$3\times3$, wd $270^\circ$ & \textbf{0.022} & 0.348 & 0.265 \\
+$3\times3$, wd $300^\circ$ & \textbf{0.008} & 0.258 & 0.500 \\
+3-chain & \textbf{0.030} & 0.337 & 0.215 \\
+$4\times4$, wd $270^\circ$ & \textbf{0.069} & 0.509 & n/a \\
+$3\times3$, AEP over 12 directions & \textbf{0.012} & 0.868 & n/a \\
+6-turbine random (weak benefit) & 0.127 & 0.127 & 0.317 \\
 \bottomrule
 \end{tabular}
 \label{tab:decoupling}
