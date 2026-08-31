@@ -1,6 +1,6 @@
 # 风电场偏航优化「交互结构」研究包 · 总览（写给承泽）
 
-**会话：Arena 01a053b1-123 ｜ 日期：2026-08-31（v2）｜ 状态：三篇论文 v2 成稿（单作者、实验章节齐、19 张图），已提交本地并推送 arena 分支**
+**会话：Arena 01a053b1-123 ｜ 日期：2026-08-31（v2）｜ 状态：三篇论文 v2 成稿（单作者、实验章节齐、19 张图）+ WES LaTeX 全稿三篇（离线编译 0 error），Supervisor-Skills 导师审查轮已过；tab:m12/tab:decoupling 已换实测真值口径，全部已推送 arena 分支**
 
 ---
 
@@ -26,12 +26,12 @@
 
 | 文件 | 内容 |
 |---|---|
-| `papers/paper1_interaction_structure.md` | **论文一（主论文）**：定理 1 + 定律 1 + 定理 2 + 比较静态 + §9 实验章节 + 附录 A–D；21 条参考文献全带核实 DOI |
+| `papers/paper1_interaction_structure.md` | **论文一（主论文）**：定理 1 + 定律 1 + 定理 2 + 比较静态 + §9 实验章节 + 附录 A–D；31 条参考文献全带核实 DOI |
 | `papers/paper2_djs_clustering.md` | **论文二**：DJS 解耦扫描（表 1 带耗时）、符号聚类、12 布局证书基准、图 1–4 |
 | `papers/paper3_power_tracking_inverse.md` | **论文三**：射线单调定理、二分反演（表 2）、双线性代理升级、图 1–4 |
 | `ws_submodularity/` | 全部实验脚本（exp_experiments*.py、exp_traces_fix.py、exp_empgauss_supp.py 等）+ `expcache/*.json` + 19 张图 |
 | `skills/interaction-structure-miner/` | 专属技能（五步流水线 + 审计协议） |
-| `NOVELTY_DOSSIER.md` / `SELF_AUDIT.md` | 新颖性档案（含 GitHub 代码通道 7 查询全零命中）/ 反省日志（3 个检查点） |
+| `NOVELTY_DOSSIER.md` / `SELF_AUDIT.md` | 新颖性档案（含 GitHub 代码通道 7 条查询全零命中）/ 反省日志（4 个检查点） |
 
 ## 三篇论文的共同口径
 
