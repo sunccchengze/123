@@ -49,16 +49,16 @@ these collective near cut-in phenomena have not previously been reported.
 \label{sec:intro}
 
 The aerodynamic interaction between wind turbines is among the best-studied collective
-phenomena in energy engineering \cite{Jensen1983,Bastankhah2016}. Wake steering raises farm
-power by 7--13\% in field campaigns \cite{Howland2019}, and wake-mixing controls impose
-periodic actuation on individual machines to accelerate recovery \cite{Korb2020,VanVondelen2024}.
+phenomena in energy engineering~\cite{Jensen1983,Bastankhah2016}. Wake steering raises farm
+power by 7--13\% in field campaigns~\cite{Howland2019}, and wake-mixing control strategies impose
+periodic actuation on individual machines to accelerate recovery~\cite{Korb2020,VanVondelen2024}.
 A large literature documents single-turbine operation near cut-in: machines in wakes cycle
 in and out of production as the local inflow oscillates around the threshold
 \cite{Howland2019,Anvari2016}. What has not been reported, to the best of our knowledge,
 is that the \emph{row} of threshold machines coupled by advected wakes behaves as an
-\emph{excitable medium} \cite{HodgkinHuxley1952,FitzHugh1961}: a spatially extended system
-of all-or-none units with a stable rest state, super-threshold waves, a refractory recovery,
-and unidirectional propagation.
+\emph{excitable medium}~\cite{HodgkinHuxley1952,FitzHugh1961}: a spatially extended system
+of all-or-none units with a stable rest state, super-threshold waves, a refractory recovery (slow wake
+re-establishment), and unidirectional propagation.
 
 The sign of the coupling is physically mandatory: a spinning turbine steals momentum and
 pushes the downstream machine \emph{below} threshold, so the coupling is inhibitory. This
@@ -103,9 +103,9 @@ u_i(t) = \uU + A\,e^{-\frac12\left(\frac{x_i-\uU(t-t_g)}{w}\right)^2}
 \label{eq:inflow}
 \end{equation}
 where $\tau_{ij}=(x_i-x_j)/\uU$ is the advective delay and $\mathcal{K}(x)$ is the wake
-kernel, either Jensen top-hat, $\mathcal{K}=1/(1+kx)^2$ \cite{Jensen1983}, or the
+kernel, either Jensen top-hat, $\mathcal{K}=1/(1+kx)^2$~\cite{Jensen1983}, or the
 Bastankhah--Port\'e-Agel axisymmetric Gaussian centerline deficit,
-$\mathcal{K}=(\tfrac12/(\tfrac12+kx))^2$ \cite{Bastankhah2016}. The thrust coefficient
+$\mathcal{K}=(\tfrac12/(\tfrac12+kx))^2$~\cite{Bastankhah2016}. The thrust coefficient
 follows a cut-in threshold with first-order rotor lag
 \begin{equation}
 \CT_i^{\rm des} =
@@ -158,9 +158,12 @@ multiplied by $m\in\{0.0,0.2,0.5\}$ for $d\in\{30,60,120,240,480\}$\,s. Settled-
 protocol: pre-window $[4200,6000]$\,s and post-window $[7000,9000]$\,s (re-settlement of a
 pulsed row completes by $3480+3050=6530$\,s). Control: no-pulse run at $T=9000$\,s,
 compared in both windows.
-\item[Exp.\,7 (model dependence).] Wake kernel $\in\{$Jensen, Gaussian$\}$ across
-$\lambda$ (Exp.~1 conditions); $\tau_r\in\{4,8,12,20\}$\,s $\times$ $k\in\{0.03,0.05,0.08\}$
-at $\lambda\in\{4,8,12\}$.
+\item[Exp.\,7 (model dependence and ablation).] (a) Wake kernel $\in\{$Jensen,
+Gaussian$\}$ across $\lambda$ (Exp.~1 conditions); $\tau_r\in\{4,8,12,20\}$\,s $\times$
+$k\in\{0.03,0.05,0.08\}$ at $\lambda\in\{4,8,12\}$. (b) \emph{Ablation:} the threshold
+removed. $N=8$, $\lambda\in\{2,\dots,12\}$, deterministic, with the all-or-none cut-in
+replaced by a linear thrust law $\CT_i^{\rm des}=\CT_0\,\min(1,u_i/u_{\rm rated})$ (machines
+never stop). Read out: per-turbine $\CT$ fractions and settled power.
 \end{description}
 
 \section{Results}
@@ -196,6 +199,14 @@ and the absolute power changes, but the staircase structure remains. In Exp.~7 t
 period is independent of $\tau_r$ (identical for $\tau_r=4$--$20$\,s) and shifts by at most
 one period for $k=0.03$--$0.08$ (Fig.~\ref{fig:param}).
 
+\emph{Attribution ablation.} The staircase must not be credited to the wake model in
+general: it must come from the all-or-none threshold. Exp.~7b removes the threshold
+(linear thrust law, machines never stop). The control is qualitatively different in every
+respect: all eight machines spin at constant $\CT$ for every spacing, and the settled power
+is a smooth monotone curve ($0.865$\,MW at $\lambda=2$ rising to $1.124$\,MW at $\lambda=12$,
+no steps, Fig.~\ref{fig:ablation}). Discrete pattern selection and the power staircase are
+therefore properties of the threshold, not of the wake kernel.
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.62\textwidth]{figs/fig3_power_steps.pdf}
@@ -210,6 +221,15 @@ both wake kernels.}
 \caption{Pattern period across the $\tau_r\times k$ grid (Exp.~7): identical within each $k$
 column group (independence of $\tau_r$), $\pm1$ period across $k$.}
 \label{fig:param}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.62\textwidth]{figs/fig8_ablation.pdf}
+\caption{Ablation (Exp.~7b): the all-or-none threshold is the source of the staircase.
+Removing it (linear thrust law) leaves all machines spinning at constant $\CT$ and the
+power smooth and monotone.}
+\label{fig:ablation}
 \end{figure}
 
 \subsection{Regenerative trigger waves}
@@ -336,9 +356,9 @@ the pattern phase diagram, not the individual pattern at a given spacing, as the
 
 Single-turbine cut-in cycling in wakes is documented in the wake-steering campaign of
 \cite{Howland2019}; phase locking of power \emph{fluctuations} (a continuous variable) by
-atmospheric correlation is reported by \cite{Anvari2016}; control-imposed periodicity above
-cut-in is the subject of helix and wake-mixing work \cite{Korb2020,VanVondelen2024};
-Kuramoto synchronization of grid-frequency rotor phases appears in \cite{arXivKuramoto}.
+atmospheric correlation is reported by~\cite{Anvari2016}; control-imposed periodicity above
+cut-in is the subject of helix and wake-mixing work~\cite{Korb2020,VanVondelen2024};
+Kuramoto synchronization of grid-frequency rotor phases appears in~\cite{arXivKuramoto}.
 None of these addresses the discrete on/off state dynamics of the row: pattern selection,
 the trigger wave, quantized power, the settlement scaling, or the defibrillation null. A
 32-query audit log (web, arXiv, Chinese; 2026-08-30/31) supporting the novelty statement is

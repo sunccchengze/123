@@ -77,3 +77,10 @@
 - S4（T=2000）：除颤脉冲 0.466→0.491 MW（+5.4%）
 ⚠️ 注：N=24 行初始条件传播到底端需 ~3050s，上述 T=1600-2000s 结果可能含初始弛豫成分。
 T=6000s 复核结果见 `results_v2.json` 与论文 §3。
+
+## 第四轮收口（2026-08-31，针对最独特具体主张的措辞变体）
+
+| # | 引擎 | 查询 | 命中 | 裁决 |
+|---|------|------|------|------|
+| 31 | web_search | "trigger wave" OR "excitation wave" propagating wind turbine row gust restart cascade advection speed | 5（全为漂浮式风机波浪-结构响应/涌动气动，无重启级联） | 零真命中 |
+| 32 | web_search | thermostat heater chain excitable medium "pattern formation" coupled oscillators thermal | 3（热敏电阻耦合 Chua/FHN 电路网络，温度作为耦合参数，非阈值继电器+平流链） | 零真命中 |
