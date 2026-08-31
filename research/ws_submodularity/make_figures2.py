@@ -19,7 +19,10 @@ if supf.exists():
     p1.setdefault("sign_mats", {})["empgauss"] = dict(H0=g["H0"], Hstar=g["Hstar"], yopt=g["yopt"],
         gain=g["gain"], od0=g["od0"], odst=g["odst"])
 
-plt.rcParams.update({"font.size": 9, "axes.titlesize": 10, "figure.dpi": 150})
+# WES requires raster figure files at 300 dpi.  ``savefig.dpi`` is explicit so
+# every output, including figures that do not pass a dpi argument, carries that
+# resolution in both pixels and PNG metadata.
+plt.rcParams.update({"font.size": 9, "axes.titlesize": 10, "figure.dpi": 300, "savefig.dpi": 300})
 colors = {"gauss": "#1f77b4", "cc": "#d62728", "empgauss": "#2ca02c", "jensen": "#9467bd"}
 
 # ---------------- Paper 1: fig7 model power curves + cos^p fits ----------------
@@ -228,5 +231,34 @@ ax.set_xlabel("model evaluations"); ax.set_ylabel("|tracking error| [kW]")
 ax.set_title("Bisection on the ray: error vs evaluation budget")
 fig.tight_layout(); fig.savefig(D/"figC3_bisection.png"); plt.close(fig)
 print("bisection study:", [(f"{r[0]:.0f}", r[3], f"{r[2]:.2e}") for r in recs])
+
+# ---------------- Appendix C Fig. C4: proxy versus exact inverse ----------------
+# The exact bar is read from the archived nine-target tracking table rather
+# than copied from an earlier coarse-grid figure.  This keeps the graphic in
+# sync with the value reported in the manuscript (max 7.82e-4 kW).
+tracking_path = CACHE / "table2_tracking.json"
+if tracking_path.exists():
+    tracking_records = json.loads(tracking_path.read_text())
+    exact_max_error = max(float(record["err"]) for record in tracking_records)
+else:
+    exact_max_error = max(record[2] for record in recs)
+proxy_max_error = 60.28  # kW; checked bilinear-proxy reverse-search maximum
+fig, ax = plt.subplots(figsize=(4.8, 3.4))
+bars = ax.bar(
+    [0, 1],
+    [proxy_max_error, exact_max_error],
+    color=["#D55E00", "#0072B2"],
+    width=0.62,
+)
+ax.set_yscale("log")
+ax.set_ylim(1e-5, 1e3)
+ax.set_xticks([0, 1])
+ax.set_xticklabels(["bilinear proxy +\nreverse search", "ray bisection\n(max. over 9 targets)"])
+ax.set_ylabel("maximum tracking error [kW] (log scale)")
+ax.set_title("Tracking accuracy on the 3$\\times$3 farm")
+for bar, value, text in zip(bars, [proxy_max_error, exact_max_error], ["60.28 kW", f"{exact_max_error:.3g} kW"]):
+    ax.text(bar.get_x() + bar.get_width() / 2, value * 1.8, text, ha="center", va="bottom", fontsize=8)
+fig.tight_layout(); fig.savefig(D/"figC4_proxy_vs_exact.png"); plt.close(fig)
+print(f"proxy-versus-exact maximum errors: {proxy_max_error:.2f} kW vs {exact_max_error:.3g} kW")
 
 print("ALL FIGURES DONE")
