@@ -1,0 +1,104 @@
+% !TEX program = pdflatex
+\documentclass[11pt]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{authblk}
+
+\title{Spike statistics as digital biomarkers for wind farms:
+diagnosing the near cut-in operating regime from standard SCADA data}
+\author{Chengze Sun\thanks{School of Energy and Power Engineering, Xi'an Jiaotong University (draft affiliation, update before submission).}}
+\date{Draft v2, 31 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Modern cardiology reads the heart by its spikes; we propose to read the wind farm the same
+way. In the near cut-in regime every turbine's power signal is a spike train: zeros below
+cut-in, production above. Using a validated one-dimensional wake-threshold model run at
+realistic turbulence intensity ($\approx 4\%$), we extract four statistics computable from
+standard SCADA data without extra instrumentation, and we report their values with
+five-seed replication ($175$--$178$ restarts per 1000\,s row-average, $\pm 1\%$):
+(i) the \emph{row firing-rate map} (restarts per unit time per machine), which exposes wake
+shadows (a machine in the first wake fires $\approx 10\times$ less than its neighbors);
+(ii) the \emph{refractory-tail index} from the inter-firing interval distribution (stable
+at 7--12\% across seeds); (iii) the \emph{coupling fingerprint}: the adjacent-machine restart
+cross-correlation peak wanders across realizations between $\approx 50$\,s (the atmospheric
+correlation time) and $\approx 130$\,s (the advection time), separating atmospheric-driven
+from wake-driven coupling regimes; and (iv) the \emph{fibrillation index} (row rate
+variance), which classifies the farm as patterned-quiescent or fibrillating. We define the
+four biomarkers formally, give the model values as calibration targets, and specify the
+field validation plan. The biomarkers are deliberately coarse: they must be computable on a
+farm historian with no wake model in the loop.
+\end{abstract}
+
+\section{Why spikes}
+
+A turbine below cut-in produces nothing and, operationally, is in a discrete state
+(stopped/running). Above cut-in it produces a smooth function of inflow. The near cut-in
+regime is therefore the only regime in which the farm's own production signal is a
+\emph{discrete event stream}: the farm is its own spike generator. Classical wind-farm
+monitoring reads aggregates (farm power, per-machine energy). We read the \emph{events}:
+restarts (power $0 \to >0$) and stops ($>0 \to 0$), extractable from any SCADA log at
+$\le 1$\,min resolution with a hysteresis threshold to reject measurement noise.
+
+\section{Biomarkers (model calibration values)}
+
+All values from the validated model: $N=16$, $U_0=3.65$\,m/s ($10\%$ above cut-in),
+$\sigma_u=0.15$\,m/s ($\approx 4\%$ turbulence intensity), $T=6000$\,s, analysis window
+$t>3000$\,s, five seeds (replication is part of the calibration, not an afterthought).
+
+\subsection{B1: Row firing-rate map}
+Per-machine restart rate per 1000\,s, row-average $175$--$178$ across seeds ($\pm 1\%$).
+The machine in the first wake fires $\approx 10\times$ less than the row median
+(10 versus $\approx 190$ per 1000\,s in the calibration run). \emph{Reading:} a persistently
+suppressed rate at a fixed machine marks a wake shadow (layout or upstream pattern branch);
+a \emph{moving} suppression marks meander or yaw error. The rate map is the farm's ECG
+strip.
+
+\subsection{B2: Refractory-tail index}
+The inter-firing interval distribution has an exponential body with a long right tail; the
+index (fraction of intervals $>3\times$ median) is stable across seeds at 7--12\%. In the
+model this index tracks the wake-re-establishment time $\tau_r + L/U$; a rising index at
+fixed layout would flag rotor-side degradation (slower spin-up) before it shows in energy.
+
+\subsection{B3: Coupling fingerprint}
+The adjacent-machine restart cross-correlation peak wanders across the five seeds between
+$\approx 45$\,s and $\approx 134$\,s, i.e.\ between the atmospheric correlation time and
+the advection time $L/U=138$\,s. \emph{Reading:} a peak pinned to the atmospheric scale
+marks atmospheric-dominated coupling (inter-machine wakes are not the driver, consistent
+with the phase-locked power-fluctuation findings of \cite{Anvari2016}); a peak migrating
+toward $L/U$ as turbulence intensity decreases marks wake-dominated coupling, the regime
+where layout and steering decisions have the largest leverage. This gives a \emph{model-free}
+way to place the farm on the atmospheric--wake coupling axis.
+
+\subsection{B4: Fibrillation index}
+Row-level: $\mathcal{F} = \mathrm{var}(\text{per-machine rates}) /
+\mathrm{mean}(\text{per-machine rates})^2$, plus the row restart rate. Quiescent patterned
+regime: low row rate, low $\mathcal{F}$. Fibrillating regime: high row rate (all machines
+chattering near threshold), moderate $\mathcal{F}$. \emph{Reading:} high row rate with low
+farm power marks the low-productivity state. The companion negative-result paper shows that
+transient coordinated pulses do \emph{not} change the settled power of a straight row, so
+the actionable levers flagged by B4 are the settled-state levers: layout (the power
+staircase of the companion flagship paper) and sustained steering, not transients. A
+$\mathcal{F}$ spike without a rate change marks a gust train sweeping the row (a transient
+trigger wave) and should not trigger actuation.
+
+\section{Field validation plan}
+
+(1) Retrospective: 3--6 months of 1-minute SCADA from a row operating routinely below
+$u_{\rm cut}+1.5$\,m/s; compute B1--B4; check B1 against known layout shadows and B3
+against the site's boundary-layer correlation time. (2) Prospective: during any near cut-in
+control campaign, verify that B3 tracks the coupling regime and that B4 marks the
+low-productivity state; apply the settlement-time rule of the companion negative-result
+paper (evaluations shorter than $(N-1)L/U$ are biased) when reading the campaign's own
+A/B numbers. (3) Negative control: in the above-rated regime the restart event stream
+vanishes (B1 $\to 0$); the biomarkers must self-invalidate outside their operating band.
+
+\section*{References}
+\begin{thebibliography}{9}
+\bibitem{Anvari2016} Anvari, P., W\"achter, M. \& Peinke, J. 2016 Phase locking of wind turbines leads to intermittent power production. \emph{Europhys.\ Lett.} 116(6), 60009. \doi{10.1209/0295-5075/116/60009}.
+\end{thebibliography}
+\end{document}
