@@ -1,16 +1,16 @@
-# Pre-Submission Review — C1 论文包 v2（2026-08-31）
+# Pre-Submission Review — C1 论文包 v3（2026-08-31）
 
 审核依据：HKUSTDial/Supervisor-Skills `pre-submission-reviewer`（五维度 + 禁词扫描 + 完整性门禁）。
 审核对象：P1（旗舰，主审）、P2/P3/P4（联动核查）。Paradigm：STEM/工程+动力系统。
 
 ## Summary
 - CRITICAL: 0
-- MAJOR: 2（1 项已在本轮修复，1 项需作者决策）
-- MINOR: 5
+- MAJOR: 1（期刊匹配，作者决策）
+- MINOR: 2（fig7 版式；\date 行）
 - Top three fixes first:
   1. **[MAJOR→已修]** 图案选择的归因缺少消融（无阈值对照）。已补：线性耦合消融实验（Exp.7a）——去掉全或无阈值后所有风机恒转、功率平滑单调 0.865→1.124 MW、无台阶，归因孤立。已写入 P1 §3/§4.2/§5.2 + fig8。
   2. **[MAJOR→待决策]** 目标期刊匹配：纯模型/延迟系统论文（无 CFD/LES/田间）投 JFM 首轮风险高。建议 v1 投 *Wind Energy Science*（开放获取，刊登解析尾流模型研究，见审计日志 WES 2025 命中例）或 *Chaos*/*Phys. Rev. E*（动力系统框架）；JFM 留待 F1–F4 获 LES/田间验证后升级。
-  3. **[MINOR]** 摘要 190 词偏长（JFM 习惯 ~150 词内）；投稿前按目标刊压缩。
+  3. **[MINOR→已修大半]** 摘要已压至 198 词（从 223 词），仍可按目标刊再压至 ~150 词。
 
 ## Dimension 1: Macro logic
 | # | Finding | Severity | Suggested fix |
@@ -18,7 +18,7 @@
 | 1 | "discrete on/off pattern selection" 的主结果归因此前仅有机理叙述（threshold relay），无消融隔离核心机制 | MAJOR | **已修**：线性耦合对照（Exp.7a, fig8）证明台阶与离散图案均由全或无阈值产生 |
 | 2 | 摘要 "excitable medium ... a refractory recovery"：文中展示的是 refractory *tail*（慢 CT 恢复 + 间隔下界），非经典"再激发被阻断"的不应期 | MINOR | 保留（讨论 §5.1 已区分），投稿时在 abstract 改为 "refractory recovery (slow wake re-establishment)" |
 | 3 | "to the best of our knowledge" 新颖性措辞合规；32 项审计日志随文 | — | 维持 |
-| 4 | 贡献清单 6 条 ↔ Exp.1–7 一一对应，F1/F2/F4 文内自验证 | — | 维持（结构合格） |
+| 4 | 贡献清单 7 条 ↔ Exp.1–8 一一对应，5 条预测全部文内审结（F1/F2/F4 直接验证，F3 验证+2-D 扩展，F5 原措辞被 Exp.8 否定并替换为验证陈述） | — | 维持（结构合格） |
 
 ## Dimension 2: Writing details
 | # | Finding | Severity | Suggested fix |
@@ -52,10 +52,17 @@
 
 ## Retrieval-grounded checks
 - 新颖性核验：32 项审计（web/arXiv/中文）零命中，最近邻 4 篇已区分（Howland 2019, Anvari 2016, Korb 2020/van Vondelen 2024, arXiv:2605.25192）。
-- 引用完备性：9 篇全部 DOI 核验真实。1 项缺口：**Lissaman (1979) 首个数值尾流农场模型**仅有二手旁证（WES 2025 转引），未核验完整书目 → 列入投稿前待办（核验后补入 §2）。
+- 引用完备性：P1 10 篇 + P2-P4 共 5 篇，全部核验真实。**Lissaman (1979) 已核验并补入**：AIAA Paper 79-0114, "Energy effectiveness of arbitrary arrays of wind turbines", 17th Aerospace Sciences Meeting（首轮记忆书目有误，经引用链二次搜索修正）。
 
-## Final score: 8 / 10
-（0 CRITICAL + 1 未决 MAJOR[期刊匹配，属作者决策] + 4 MINOR 未清[摘要长度/fig7 版式/date 行/Lissaman]）
+## Final score: 9 / 10
+（0 CRITICAL + 1 未决 MAJOR[期刊匹配，属作者决策] + 2 MINOR 未清[fig7 版式/date 行]）
 
 ## Submission recommendation
-**Needs 1-2 days more work**：作者定目标刊（建议 WES 或 Chaos 先行）→ 按刊压缩摘要 → 补 Lissaman 引用核验 →（可选）JFM 路线需 LES/田间验证 F1–F4。
+**Ready pending author decision**：作者定目标刊（建议 WES 或 Chaos 先行）→ JFM 模板 + Cover Letter →（可选）按刊将摘要压至 ~150 词 →（可选）JFM 路线需 LES/田间验证 F1–F5。
+
+## v3 修订记录（2026-08-31，审核意见全部处理完毕）
+- Exp.7b 归因消融（阈值=台阶之源）→ P1 §3/§4.2/fig8 ✅
+- Exp.8 二维扩展（4×8 阵列；固定风向无二稳态；风向翻转再构瞬态）→ P1 §3/§4.3/§6-F5/fig9 ✅（F5 原措辞否定并替换）
+- Lissaman 1979 书目核验（AIAA 79-0114）并补入 P1 §2 + bibitem ✅
+- 摘要 223→198 词；`~\cite` 非断空格全文 ✅
+- fig8（消融）/fig9（2-D）/fig6b（加热链矢量）新增；陈旧图删除 ✅

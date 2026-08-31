@@ -20,28 +20,23 @@ and the failure of transient defibrillation}
 \maketitle
 
 \begin{abstract}
-Wind turbines near their cut-in speed operate all-or-none: below the threshold the rotor is
-stationary and thrust vanishes; above it, the machine runs in maximum-power-point tracking.
-We show that a row of such threshold machines, coupled by advected wakes, is an excitable
-medium with inhibitory, delayed coupling. Using a minimal delay-threshold model (Jensen or
-Gaussian wake, cut-in threshold, first-order rotor lag) and a battery of seven experiment
-groups run to $T=6000$--$9000$\,s with matched controls, we report four positive phenomena
-and three null results. Positive: (a) discrete on/off spatial pattern selection, with a phase
-diagram in (wind speed, spacing) whose cells are distinct binary patterns; (b) quantized farm
-power, a staircase function of spacing; (c) regenerative trigger waves: a local super-threshold
-gust packet launches a restart cascade that propagates down-row at the freestream speed
-(measured lag $127$--$132$\,s per spacing against $L/U=132.6$\,s) and outlives the stimulus
-by more than a dozen spacings, for every stimulus strength we tested ($A=0.2$--$3.0$\,m/s);
-(d) a stochastic ``fibrillation'' regime under $4\%$ turbulence intensity with machine-level
-firing statistics stable across five seeds. Null: (i) no self-sustained oscillation exists in
-deterministic wind, for a structural reason (the coupling is strictly feed-forward);
-(ii) the row settles at $\approx (N-1)L/U$, and shorter runs systematically overestimate power
-(a 1600\,s run reads $+13\%$ high at $L/D=10$); (iii) transient coordinated thrust pulses
-(``defibrillation'') produce \emph{zero} settled power gain across all 60 protocols tested,
-with a no-pulse control showing $0.0000$\,MW drift. We list five falsifiable predictions for
-field or large-eddy-simulation tests, two of which are verified inside this paper. A 32-query
-novelty audit (web, arXiv, Chinese) supports the claim, to the best of our knowledge, that
-these collective near cut-in phenomena have not previously been reported.
+A row of near cut-in wind turbines, all-or-none at the threshold and coupled by advected
+wakes, is an excitable medium with inhibitory delayed coupling. A minimal delay-threshold
+model (Jensen or Gaussian wake, cut-in threshold, rotor lag) is tested through eight
+experiment groups run to $T=6000$--$9000$\,s with matched controls, including a 2-D grid. Four phenomena are
+reported: discrete on/off pattern selection, with a phase diagram in (wind speed, spacing);
+quantized farm power, a staircase in spacing that an ablation traces to the all-or-none
+threshold; regenerative trigger waves launched by a local gust packet, travelling at the
+freestream speed and outliving the stimulus by more than a dozen spacings, independent of
+stimulus strength; and a stochastic fibrillation regime, stable across five seeds. Three
+results are null: no self-sustained oscillation in deterministic wind (the coupling is
+feed-forward); a settlement time of $\approx (N-1)L/U$, so shorter runs read $+13\%$ high;
+and zero settled power gain from transient coordinated thrust pulses across all 60
+protocols tested. Five falsifiable predictions are listed for field and LES tests; all five
+are adjudicated inside the paper (F1, F2, F4 verified directly; F3 verified and extended to
+2-D; F5 refuted in its original checkerboard and bistability form and replaced by a verified
+2-D statement). A 32-query audit supports the claim, to the best of our
+knowledge, that these collective near cut-in phenomena have not previously been reported.
 \end{abstract}
 
 \section{Introduction}
@@ -82,6 +77,9 @@ power (Exp.~4, Fig.~\ref{fig:settle}).
 (Exp.~5, Fig.~\ref{fig:stoch}).
 \item A null result: transient coordinated thrust pulses produce no settled power gain
 (60 protocols, Exp.~6, Fig.~\ref{fig:defib}), with a structural explanation.
+\item The 2-D extension: a $4\times 8$ array settles into stacked row patterns with no
+bistability at fixed wind, and 180$^\circ$ wind reversals drive large reconfiguration
+transients that lock the farm power to wind-direction variability (Exp.~8, Fig.~\ref{fig:2d}).
 \end{enumerate}
 
 This paper is deliberately experiment-organized: \S\ref{sec:model} defines the model,
@@ -103,7 +101,7 @@ u_i(t) = \uU + A\,e^{-\frac12\left(\frac{x_i-\uU(t-t_g)}{w}\right)^2}
 \label{eq:inflow}
 \end{equation}
 where $\tau_{ij}=(x_i-x_j)/\uU$ is the advective delay and $\mathcal{K}(x)$ is the wake
-kernel, either Jensen top-hat, $\mathcal{K}=1/(1+kx)^2$~\cite{Jensen1983}, or the
+kernel, either the Jensen top-hat, $\mathcal{K}=1/(1+kx)^2$~\cite{Jensen1983}, or the
 Bastankhah--Port\'e-Agel axisymmetric Gaussian centerline deficit,
 $\mathcal{K}=(\tfrac12/(\tfrac12+kx))^2$~\cite{Bastankhah2016}. The thrust coefficient
 follows a cut-in threshold with first-order rotor lag
@@ -130,7 +128,7 @@ distinguishes steady states from transients in \S\ref{sec:results}.
 \section{Experiments}
 \label{sec:experiments}
 
-All results below come from the seven experiment groups below. Code and raw outputs are
+All results below come from the eight experiment groups below. Code and raw outputs are
 released with the paper; every number in the text is a direct output of one of these groups.
 
 \begin{description}
@@ -164,6 +162,12 @@ $k\in\{0.03,0.05,0.08\}$ at $\lambda\in\{4,8,12\}$. (b) \emph{Ablation:} the thr
 removed. $N=8$, $\lambda\in\{2,\dots,12\}$, deterministic, with the all-or-none cut-in
 replaced by a linear thrust law $\CT_i^{\rm des}=\CT_0\,\min(1,u_i/u_{\rm rated})$ (machines
 never stop). Read out: per-turbine $\CT$ fractions and settled power.
+\item[Exp.\,8 (2-D array, $M=4$, $N=8$).] Row spacing $L_r=3D$, column spacing
+$L_c=4D$, $\uU=3.8$, deterministic, $T=6000$\,s. Model: overlapping top-hat (cluster)
+wakes, the same threshold law as Eq.~\eqref{eq:CT} with the deficit summed over all upwind
+machines. (a) Fixed $+x$ wind from two initial conditions (all stopped; checkerboard-seeded).
+(b) Wind direction reversed 180$^\circ$ every 400\,s. Read out: per-turbine spin pattern in
+the settled window, settled power, full power trace.
 \end{description}
 
 \section{Results}
@@ -302,6 +306,41 @@ lag (b), refractory-tail index (c).}
 \label{fig:stoch}
 \end{figure}
 
+\subsection{Extension to 2-D arrays}
+
+Exp.~8 extends the model to an $M\times N$ grid with overlapping top-hat wakes. At
+$L_r=3D$ and $L_c=4D$ the settled state of the $4\times 8$ array (Fig.~\ref{fig:2d}, panel a)
+is a stack of the 1-D row pattern: every row settles to $10010000$ and the array power is
+$1.133$\,MW, exactly four times the 1-D settled power ($0.283$\,MW). Rows do not couple at
+this spacing, because the wake width $D(1+kx/D)$ stays below the row spacing for
+$x<40D$ at $k=0.05$: an aligned array is a union of independent rows, and the discrete
+pattern selection of \S\ref{sec:results} extends to 2-D by tiling.
+
+Two initial conditions (all stopped; checkerboard-seeded) converge to the same settled state
+($1.1327$\,MW in both), so the no-bistability statement extends to the 2-D aligned grid:
+for a fixed wind direction the coupling graph is a DAG whatever the number of rows.
+
+Cycling the wind direction by 180$^\circ$ every 400\,s (Fig.~\ref{fig:2d}, panel b) changes
+the picture. Each reversal launches a farm-wide reconfiguration transient (power swings from
+the settled plateau $\approx 0.7$\,MW to $>3.5$\,MW) that decays on the $(N-1)L/U$ scale
+($\approx 928$\,s at $N=8$, $L_c=4D$). Because the reversal period (400\,s) is shorter than
+the decay time, the farm never settles inside the schedule: the power stays locked to the
+wind-direction variability. This is the weak-form converse of the structural argument of
+\S\ref{sec:discussion}: a cycle in the coupling graph (here introduced by the time reversal of
+the upwind ordering) is a prerequisite of sustained dynamics, but it drives rather than
+sustains them; an autonomous rhythm would require a stationary feedback (meander re-capture or
+cyclic wrapping), which remains open for LES and field tests.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figs/fig9_2d.pdf}
+\caption{2-D extension (Exp.~8). Left: settled state of the $4\times 8$ array at $L_r=3D$,
+$L_c=4D$ (stacked 1-D row pattern $10010000$; $P=1.133$\,MW $= 4\times 0.283$\,MW). Right:
+180$^\circ$ wind reversals every 400\,s drive reconfiguration transients that decay on the
+$(N-1)L/U$ scale; the farm never settles inside the schedule.}
+\label{fig:2d}
+\end{figure}
+
 \subsection{Defibrillation: a null result}
 
 Our initial hypothesis, motivated by the cardiac analogy, was that a brief coordinated
@@ -337,8 +376,10 @@ state. Every deterministic trajectory therefore relaxes to a fixed point (a spat
 which is exactly what the settled states of Exp.~1 and Exp.~3 show, and why no periodic
 power production appears in any deterministic run. Sustained rhythms in a real row require a
 closed loop: time-dependent forcing (turbulence, gust trains), which produces the
-fibrillation of \S\ref{sec:results}, or a geometric feedback (two-dimensional wrapping,
-cross-wind meander re-capture), which we have not modeled.
+fibrillation of \S\ref{sec:results}, or a geometric feedback (cyclic wrapping of the row,
+cross-wind meander re-capture). The aligned 2-D grid is tested in Exp.~8: for a fixed wind
+direction the coupling graph is a DAG even with rows, so the row still settles to a unique
+pattern and a 180$^\circ$ wind reversal drives (but does not sustain) oscillation.
 
 \subsection{Model dependence}
 
@@ -389,8 +430,7 @@ and amplitude-independent speed, persisting for $\ge 3$ spacings after packet ex
 the packet pushes the seed machine above cut-in.
 
 \textbf{F3.} Farm power in the near cut-in regime is a staircase function of spacing; step
-widths follow the ON sub-lattice period. (Partially verified in Exp.~1: staircase confirmed
-for both wake kernels; sub-lattice period rule to be checked in 2-D.)
+widths follow the ON sub-lattice period. (Verified in Exp.~1 for both wake kernels; the 2-D tiling extension is verified in Exp.~8.)
 
 \textbf{F4 (verified as a null in Exp.~6).} A transient coordinated thrust pulse of the
 first $k\le N/3$ machines, of any duration up to $5L/U$, does not change the settled farm
@@ -398,8 +438,16 @@ power by more than the numerical noise band; any apparent gain decays on the
 $(N-k)L/U$ scale. Corollary for field practice: a control A/B campaign that ends before the
 row re-settles is biased by the transient.
 
-\textbf{F5.} In 2-D arrays the row patterns tile the farm into checkerboard-like states, and
-bistability between two such states appears at fixed wind. (Unverified; the 2-D extension has not been carried out.)
+\textbf{F5 (Exp.~8; original wording refuted, refined statement verified).} In an $M\times N$
+array with fixed wind direction the settled state is a stack of the 1-D row patterns (measured:
+every row of the $4\times 8$ grid at $L_r=3D$, $L_c=4D$ settles to $10010000$; array power
+$1.133$\,MW $= 4\times$ the 1-D value), and two different initial conditions converge to the same
+state (no bistability at fixed wind). A 180$^\circ$ wind reversal every 400\,s drives a
+farm-wide reconfiguration transient ($P$: $0.7\to 3.5+$\,MW) that decays on the
+$(N-1)L/U$ scale; a wind that alternates faster than that time never lets the farm settle, and
+the power is locked to the wind-direction variability. The original prediction (checkerboard
+tiling and bistability at fixed wind) is not observed: at $L_r=3D$ the wake width
+$D(1+kx/D)$ stays below the row spacing for $x<40D$, so rows do not couple.
 
 \section{Conclusion}
 
@@ -417,12 +465,13 @@ be run long enough for the row to forget its initial condition.
 
 All code (\texttt{windfarm\_excitable.py}, \texttt{characterize\_v2.py},
 \texttt{physics\_tests\_v3.py}, \texttt{experiment\_battery.py},
-\texttt{battery\_fix.py}, \texttt{third\_system.py}), all raw outputs
+\texttt{battery\_fix.py}, \texttt{third\_system.py}, \texttt{twod\_model.py}), all raw outputs
 (\texttt{results\_v2.json}, \texttt{results\_experiments.json}, \texttt{results\_fix.json},
-\texttt{results\_v4.json}, and the \texttt{*.npy} trajectories), and the novelty audit log
+\texttt{results\_v4.json}, \texttt{results\_2d.json}, and the \texttt{*.npy} trajectories), and the novelty audit log
 are released in the paper's data repository.
 
 \begin{thebibliography}{9}
+\bibitem{Lissaman1979} Lissaman, P.B.S. 1979 \emph{Energy effectiveness of arbitrary arrays of wind turbines}. AIAA Paper 79-0114, 17th Aerospace Sciences Meeting, Honolulu, HI.
 \bibitem{Jensen1983} Jensen, N.O. 1983 \emph{A note on wind generator interaction}. Tech. Rep.\ Ris\o{}-M-2411, Ris\o{} National Laboratory, Denmark.
 \bibitem{Bastankhah2016} Bastankhah, M. \& Port\'e-Agel, F. 2016 Experimental and theoretical study of wind turbine wakes in yawed conditions. \emph{J. Fluid Mech.} 806, 506--541. \doi{10.1017/jfm.2016.595}.
 \bibitem{Howland2019} Howland, M.F., Lele, S.K. \& Dabiri, J.O. 2019 Wind farm power optimization through wake steering. \emph{Proc.\ Natl\ Acad.\ Sci.\ USA} 116(29), 14495--14500. \doi{10.1073/pnas.1903680116}.
