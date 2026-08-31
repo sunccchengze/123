@@ -52,9 +52,9 @@ Because $P$ along the ray is monotone non-decreasing with a unique maximum at $t
 
 \textit{Sketch.} $dP/dt = \sum_i w_i\,\partial P/\partial\yaw_i$; each term splits into the self-cost $-p\,\sin\yaw_i\cos^{p-1}\yaw_i\,\tilde v_i^3$ and the downstream benefit $3\sum_{k\succ i}\cos^p\yaw_k\,\tilde v_k^2\,r_{ik}$; along the ray both scale so that the benefit terms dominate for all $t$ when the phase condition holds (induction on the wake DAG from downstream turbines upward).
 
-\textbf{Numerics (Fig.~\ref{fig:rays}).} The 3-chain ray $[30,22.6,0]^\circ\cdot t$ and the $3\times3$ ray $[30,30,30,20,20,20,0,0,0]^\circ\cdot t$ are monotone non-decreasing on $t\in[0,1]$ (41 samples); the two-turbine ray $[30,0]^\circ\cdot t$ is monotone only up to $t=0.87$, past the peak at $\yaw_1=26^\circ$ it decreases. That is precisely the failure mode the theory predicts for rays that overshoot the optimum, and exactly why the proxy needs reverse search today: overshooting rays are non-monotone, so well-posedness must be \emph{checked}, not assumed. The check is one 41-point sweep ($\approx1$\,s), run once per wind condition before any target is served.
+\textbf{Numerics (Fig.~\ref{fig:rays}).} The 3-chain ray $[30,22.6,0]^\circ\cdot t$ and the $3\times3$ ray $[30,30,30,20,20,20,0,0,0]^\circ\cdot t$ are monotone non-decreasing on $t\in[0,1]$ (41 samples); the two-turbine ray $[30,0]^\circ\cdot t$ is monotone only up to $t\approx0.88$, past the peak at $\yaw_1=26.5^\circ$ it decreases. That is precisely the failure mode the theory predicts for rays that overshoot the optimum, and exactly why the proxy needs reverse search today: overshooting rays are non-monotone, so well-posedness must be \emph{checked}, not assumed. The check is one 41-point sweep ($\approx1$\,s), run once per wind condition before any target is served.
 
-\textbf{Quasi-concavity across spacings (Fig.~\ref{fig:quasi}).} The two-turbine response $P(\yaw_1,0)$ has a single peak in the valid region ($\yaw_1 \le 25^\circ$) for every spacing tested: the peak moves $30^\circ$ (4D, at the boundary) $\to 27^\circ$ (5D) $\to 24^\circ$ (6D) $\to 23^\circ$ (7D), and both branches are monotone up to the declared validity boundary. Beyond $25^\circ$ at 4D the FLORIS response wiggles (negative-velocity warning zone); we exclude that region and say so, consistent with the companion paper's Appendix~B. The single-peak shape is what makes the inverse well posed on $[0,\yaw^\ast]$ and ill posed beyond it.
+\textbf{Quasi-concavity across spacings (Fig.~\ref{fig:quasi}).} The two-turbine response $P(\yaw_1,0)$ is single-peaked over the tested range for every spacing, with the peak moving $30^\circ$ (4D, at the boundary of the negative-velocity warning zone) $\to 26.5^\circ$ (5D) $\to 24.5^\circ$ (6D) $\to 23^\circ$ (7D); both branches are monotone for 5D--7D. At 4D the response wiggles beyond $25^\circ$ (negative-velocity warnings); that boundary zone is excluded from the quasi-concavity claim, consistent with the companion paper's Appendix~B. The single-peak shape is what makes the inverse well posed on $[0,\yaw^\ast]$ and ill posed beyond it.
 
 \section{Bisection on the ray: the tracking scheme}
 \label{sec:bisection}
@@ -105,13 +105,13 @@ We have shown that the inverse problem of wake steering, historically avoided, b
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../ws_submodularity/figC1_rays.png}
-\caption{Power response along profile rays (share of available gain versus ray parameter $t$): the 3-chain and $3\times3$ rays are monotone non-decreasing on $[0,1]$; the two-turbine ray overshooting its $26^\circ$ peak turns down past $t=0.87$, the non-monotonicity that makes well-posedness checks necessary.}
+\caption{Power response along profile rays (share of available gain versus ray parameter $t$): the 3-chain and $3\times3$ rays are monotone non-decreasing on $[0,1]$; the two-turbine ray overshooting its $26.5^\circ$ peak turns down past $t\approx0.88$, the non-monotonicity that makes well-posedness checks necessary.}
 \label{fig:rays}
 \end{figure}
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../ws_submodularity/figC2_quasiconcavity.png}
-\caption{Two-turbine $P(\yaw_1,0)$ is quasi-concave with a single peak for every spacing (4D--7D): peaks at $30^\circ$ (4D, boundary) / $27^\circ$ (5D) / $24^\circ$ (6D) / $23^\circ$ (7D), both branches monotone within the validity region $\yaw_1\le25^\circ$.}
+\caption{Two-turbine $P(\yaw_1,0)$ is single-peaked for every spacing (0.5$^\circ$ grid): peaks at $30^\circ$ (4D, boundary of the warning zone) / $26.5^\circ$ (5D) / $24.5^\circ$ (6D) / $23^\circ$ (7D); both branches monotone for 5D--7D, the 4D tail beyond $25^\circ$ excluded (negative-velocity warnings).}
 \label{fig:quasi}
 \end{figure}
 

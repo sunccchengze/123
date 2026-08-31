@@ -108,12 +108,14 @@ ax2.legend(fontsize=7)
 fig.tight_layout(); fig.savefig(D/"fig11_djs_traces.png"); plt.close(fig)
 
 # ---------------- Paper 1: fig12 quasi-concavity vs spacing ----------------
-qc = p1["qc"]
+import json as _json, pathlib as _pl
+_qf = _pl.Path("expcache/qc_fine.json")
+qc = _json.load(open(_qf)) if _qf.exists() else p1["qc"]  # 0.5deg fine grid if available
 fig, ax = plt.subplots(figsize=(4.8, 3.4))
 for s in ["4", "5", "6", "7"]:
     d = qc[s]
     g, P = np.asarray(d["g"]), np.asarray(d["P"])
-    ax.plot(g, (P/P[0]-1)*100, "o-", ms=3.5, lw=1.3, label=f"{s}D (peak {d['peak']:.0f}°)")
+    ax.plot(g, (P/P[0]-1)*100, "o-", ms=3.5, lw=1.3, label=f"{s}D (peak {d['peak']:.1f}°)")
 ax.set_xlabel("γ₁ [deg]"); ax.set_ylabel("ΔP/P₀ [%] (two turbines)")
 ax.set_title("Quasi-concavity of P(γ₁, 0) across spacings")
 ax.legend(fontsize=8)
@@ -196,7 +198,7 @@ fig, ax = plt.subplots(figsize=(4.8, 3.4))
 for s in ["4", "5", "6", "7"]:
     d = qc[s]
     g, P = np.asarray(d["g"]), np.asarray(d["P"])
-    ax.plot(g, (P/P[0]-1)*100, "o-", ms=3.5, lw=1.3, label=f"{s}D (peak {d['peak']:.0f}°)")
+    ax.plot(g, (P/P[0]-1)*100, "o-", ms=3.5, lw=1.3, label=f"{s}D (peak {d['peak']:.1f}°)")
 ax.set_xlabel("γ₁ [deg]"); ax.set_ylabel("ΔP/P₀ [%]")
 ax.set_title("Quasi-concave single-peak response (two turbines)")
 ax.legend(fontsize=8)
