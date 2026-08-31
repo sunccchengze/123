@@ -3,6 +3,15 @@
 % copernicus.cls; this file is never part of the submission.
 \ProvidesPackage{copernicus_local}
 
+% The actual Copernicus class loads amsmath.  The article-based fallback must
+% supply it itself after manuscript source files stop loading redundant packages.
+\RequirePackage{amsmath}
+% The actual Copernicus class also supplies natbib; manuscript source files no
+% longer load it redundantly.
+\RequirePackage{natbib}
+% Likewise, the actual class provides graphicx for manuscript figures.
+\RequirePackage{graphicx}
+
 % Copernicus class commands used by our manuscripts
 \newcommand{\runningtitle}[1]{}
 \newcommand{\runningauthor}[1]{}
@@ -28,6 +37,9 @@
 \newcommand{\published}[1]{}
 \newcommand{\firstpage}[1]{}
 \newcommand{\articletype}[1]{}
+% Restores normal section behavior after an appendix in the real class.  It is
+% a no-op here because the fallback only typesets hidden back-matter commands.
+\newcommand{\noappendix}{}
 
 % article's \author takes one argument; Copernicus style uses \author[1]{...}
 \makeatletter

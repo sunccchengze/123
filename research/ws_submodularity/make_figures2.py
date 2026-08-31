@@ -233,16 +233,21 @@ fig.tight_layout(); fig.savefig(D/"figC3_bisection.png"); plt.close(fig)
 print("bisection study:", [(f"{r[0]:.0f}", r[3], f"{r[2]:.2e}") for r in recs])
 
 # ---------------- Appendix C Fig. C4: proxy versus exact inverse ----------------
-# The exact bar is read from the archived nine-target tracking table rather
-# than copied from an earlier coarse-grid figure.  This keeps the graphic in
-# sync with the value reported in the manuscript (max 7.82e-4 kW).
+# Both bars are read from one matched-target benchmark: nine targets shared by
+# Table 2, the exact ray inversion, and the five-node proxy slice.  This avoids
+# comparing maxima measured on different target grids.
 tracking_path = CACHE / "table2_tracking.json"
-if tracking_path.exists():
-    tracking_records = json.loads(tracking_path.read_text())
-    exact_max_error = max(float(record["err"]) for record in tracking_records)
-else:
-    exact_max_error = max(record[2] for record in recs)
-proxy_max_error = 60.28  # kW; checked bilinear-proxy reverse-search maximum
+proxy_path = CACHE / "proxy_tracking_benchmark.json"
+if not tracking_path.exists() or not proxy_path.exists():
+    raise RuntimeError("Run exp_inverse.py to regenerate the matched-target tracking caches.")
+tracking_records = json.loads(tracking_path.read_text())
+proxy_benchmark = json.loads(proxy_path.read_text())
+exact_targets = np.asarray([float(record["target"]) for record in tracking_records])
+proxy_targets = np.asarray(proxy_benchmark["targets_kW"], dtype=float)
+if exact_targets.shape != proxy_targets.shape or not np.allclose(exact_targets, proxy_targets, rtol=0.0, atol=1e-8):
+    raise RuntimeError("Proxy and exact benchmark target grids differ; refusing to draw an unfair comparison.")
+exact_max_error = max(float(record["err"]) for record in tracking_records)
+proxy_max_error = float(proxy_benchmark["max_error_kW"])
 fig, ax = plt.subplots(figsize=(4.8, 3.4))
 bars = ax.bar(
     [0, 1],
@@ -253,12 +258,12 @@ bars = ax.bar(
 ax.set_yscale("log")
 ax.set_ylim(1e-5, 1e3)
 ax.set_xticks([0, 1])
-ax.set_xticklabels(["bilinear proxy +\nreverse search", "ray bisection\n(max. over 9 targets)"])
+ax.set_xticklabels(["five-node proxy slice\n(reverse search)", "ray bisection\n(same 9 targets)"])
 ax.set_ylabel("maximum tracking error [kW] (log scale)")
-ax.set_title("Tracking accuracy on the 3$\\times$3 farm")
-for bar, value, text in zip(bars, [proxy_max_error, exact_max_error], ["60.28 kW", f"{exact_max_error:.3g} kW"]):
+ax.set_title("Matched-target tracking accuracy on the 3$\\times$3 farm")
+for bar, value, text in zip(bars, [proxy_max_error, exact_max_error], [f"{proxy_max_error:.2f} kW", f"{exact_max_error:.3g} kW"]):
     ax.text(bar.get_x() + bar.get_width() / 2, value * 1.8, text, ha="center", va="bottom", fontsize=8)
 fig.tight_layout(); fig.savefig(D/"figC4_proxy_vs_exact.png"); plt.close(fig)
-print(f"proxy-versus-exact maximum errors: {proxy_max_error:.2f} kW vs {exact_max_error:.3g} kW")
+print(f"matched-target proxy-versus-exact maximum errors: {proxy_max_error:.2f} kW vs {exact_max_error:.3g} kW")
 
 print("ALL FIGURES DONE")

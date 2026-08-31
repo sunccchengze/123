@@ -72,3 +72,29 @@
 **反省动作**（本轮把三篇论文里每一个数字都对着实验缓存/重跑核了一遍，抓到的问题）：发现论文二表 1 的 3×3 SLSQP gain 误写 +24.12（真值 24.13）；论文二摘要/贡献"rand16 gap≤0.005%、≤0.48%"与实测 −0.023% 冲突（已如实改写）；"per-row greedy 0.09%"实测为 0.07%；论文三摘要"误差≈10⁻⁷ kW"与可复现 study（1.5e-6–7.8e-4 kW）不符（已全改，并把"六数量级"修正为五数量级、"同成本"改为"可比预算"）；5×5 聚类墙时钟本轮重跑 62 s/346 s（原 60 s/317 s，墙钟随负载波动，已按新测值更新并注明）；Jiménez 0.042/0.319 无缓存 → 重测为 0.302→0.037（已替换并缓存）；TI 扫描 29.8/28.1/25.3/21.0/10.7/0.8 与三机链 [30,23.8,0]/[18.6,17.1,0]、32.0%/2.9% 全部精确复现（已缓存）；12 布局证书（均值 0.103/最大 0.477/界 0.12–7.05%）逐格对上；三篇摘要压至 246/237/239 词（WES ≤250）且 humanizer 实测 93/91/89 分、0 AI 词 0 hedge；三篇 .tex 补齐 correspondence/日期占位/copyright/code-availability/author-contribution/competing-interests（WES 必需）。
 
 **另一件事**：push 途中 GitHub 令牌失效（git 与 gh 均 Bad credentials）。本地所有提交完好（唯一未推送提交为 h 口径统一及之后两个提交）；已停止重复尝试，等承泽在 Arena 重连 GitHub 后一次 push 全部。**教训：令牌失效不丢工作——本地 git 历史就是保险。**
+
+## 审计点 #6（2026-08-31，WES 模板与图件复核）
+
+**当时的自负**：认为离线 PDF 能编译、表格数字也已复算，就可以把三篇稿件称作“只差投稿”。
+
+**反省动作**：
+
+1. 对照 Copernicus 当前 manuscript-preparation 示例逐项检查源文件，发现三篇都把元数据放在 `\begin{document}` 前、把 author declarations 放在 appendix 前，并带有作者自定义命令、额外包和 P1 的自定义定理/proof/`\paragraph`。全部改为官方顺序，删除这些源级定义并用标准 LaTeX 内联符号；本地垫片只保留与真实类接口一致的兼容定义。**教训：垫片能编译不等于正式类允许该源文件。**
+2. 逐张读取 19 个 PNG 的像素、density 与文件大小，发现原图大多只有 150 dpi，Fig. C4 更只有 100 dpi；`make_figures.py` 还含旧的 Fig. 3/6 硬编码，Fig. C4 没有生成链且标着过期 $4.18\times10^{-4}$ kW。重构为缓存驱动的图链，新增相图和 wd-$300^\circ$ Hessian 原始缓存；所有图以 300 dpi 重画且每张低于 5 MB。**教训：稿件数字、图中文字和作图脚本必须三向对账。**
+3. 继续追溯 Fig. C4 的 60.28 kW，发现它来自旧的 8 目标 proxy 试验，而 Table 2/exact 图使用 9 个目标；在同一 9 目标上重算，proxy 最大误差为 **51.8937 kW（0.5168% $P_{\max}$）**，exact 最大误差为 **$7.8209\times10^{-4}$ kW**，比值 $6.64\times10^4$（约 4.8 个数量级）。`exp_inverse.py` 现把两边输入/结果写入版本化 JSON，并在绘图前拒绝不同目标格的比较。**教训：即使每个数各自为真，不同 benchmark grid 的“最大值”也不能直接比较。**
+4. 再次核查 WES AI policy：其允许语言层面的 grammar/spelling/readability 辅助，却明确禁止用生成式 AI 生成论文文本或科学解释。本工作流含实质性生成辅助，不能通过一句虚假声明变为 WES 合规稿；必须由作者独立重写、重推导和重核验，或换允许透明披露的期刊。同时，真实 v7.15 类编译和有 DOI 的不可变代码/数据存档仍未完成。**教训：格式完成和科研/出版伦理合规是不同的验收门。**
+
+**结论**：本轮提高了可追溯性和模板兼容性，但把投稿状态从“接近完成”诚实地改为“不可直接投稿”。后续不应以本地 shim、GitHub 工作分支或 AI 辅助文稿冒充 WES 最终投稿物。
+
+## 审计点 #7（2026-08-31，WES 图文位置与回退 PDF 可视化复核）
+
+**当时的自负**：以为只要把 `figure` 环境从 conclusions 后搬到正文，就已经满足 Copernicus 的“图和 caption 靠近首次提及”要求。
+
+**反省动作**：
+
+1. 做 source-level 索引后发现，原先 20 个 figure environment 虽然都有正文引用，但都集中在 conclusions 后；这直接违反官方 manuscript-preparation 指南。P1 的 12 张中还混入了属于 P2（DJS）和 P3（quasi-concavity）的重复结果图，若三篇分别投稿会造成不必要的自我重复。
+2. 先将保留图移动到首次讨论段之后，并把 P1 手写的 `Figure 1/2/3` 和 Section 9 图号改为 `\ref`，以免浮动环境重排后引用失真。随后不把“源位置正确”误当成“成品排版正确”：第一次双遍 article+shim 编译的 PDF 仍把若干 `[t]` float 拖到文末。改用标准 LaTeX `[htbp]`，并在 P2 的 certificate、P3 的 bisection/proxy 图后使用 `\clearpage` 清空队列；重新渲染 PDF 后，所有图均在其后续 discussion/conclusions/bibliography 之前出现。这个可视化检查是回退链测试，不是官方 WES 类的证明。
+3. P1 现只保留 10 张其自身的交互结构/稳健性图；DJS 图只在 P2，quasi-concavity 图只在 P3。P3 原来只有一个表，导致源码写的“Table 2”在实际输出中成为 Table 1；新增可复现的共同 benchmark Table 1（布局、风况、射线、九目标、Brent 与五节点 proxy 协议），使九目标结果真正成为 Table 2。这样 `table2_tracking.json` 的命名、正文、图注和 Markdown 不再互相矛盾。
+4. 最终静态预检确认三篇均使用 `\documentclass[wes, manuscript]{copernicus}`、无作者额外 package/宏/`\paragraph`，作者邮箱一致；每一张保留图均在首次 `\ref` 之后、conclusions 之前。三篇各自两遍回退编译均为 0 LaTeX error、0 未定义引用和 0 未定义文献。P3 还直接断言 exact/proxy 的九个 target 数组逐项相同，最大误差为 $7.8209\times10^{-4}$ / 51.8937 kW，Fig. C4 为 1440$\times$1020 px、约 300 dpi。
+
+**结论**：这一轮修的是出版对象的结构一致性，而不是新增科学证据。真实 `copernicus.cls` 编译、永久 DOI 存档、作者对交叉稿件重叠的判断，以及 WES 对生成式 AI 文本/解释的政策阻塞仍然存在；不能因本地 PDF 好看就把状态改写为“可直接投稿”。

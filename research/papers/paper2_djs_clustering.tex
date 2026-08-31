@@ -7,13 +7,8 @@
 %          figB4_walltime.png, figB5_certificate.png ; bibliography: refs.bib
 
 \documentclass[wes, manuscript]{copernicus}
-\usepackage{amsmath, amssymb, booktabs, graphicx, bm}
-\newcommand{\coloneqq}{\mathrel{\mathop:}=}
-\usepackage{natbib}
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\newcommand{\tv}{\tilde{v}}
-\newcommand{\yaw}{\gamma}
-\newcommand{\gbar}{\bar{\gamma}}
+
+\begin{document}
 
 \title{Interaction-aware wake steering optimization: decoupled Jacobi sweeps and sign-matrix clustering with bounded-interaction guarantees}
 \author[1]{Chengze Sun}
@@ -27,10 +22,6 @@
 \accepted{}
 \published{}
 \firstpage{1}
-\copyrightstatement{\copyright\ Author(s) 2026. This work is distributed under the Creative Commons Attribution 4.0 License.}
-\articletype{Research article}
-
-\begin{document}
 \maketitle
 
 \begin{abstract}
@@ -47,49 +38,76 @@ Fifteen years of wake-steering practice have produced a split personality. On on
 \section{Background: the interaction decomposition}
 \label{sec:background}
 
-We restate the three facts we build on. \textbf{Theorem 1 (C--S decomposition).} For the deficit-additive wake-power class $P(\yaw) = \sum_k \cos^p(\yaw_k)\tv_k^3$, every mixed partial splits into $M_{ij} = B_{ij} - A_{ij}$ with $B_{ij}\ge0$ (complementarity through shared downstream turbines) and $A_{ij}\ge0$ (substitution through a downstream turbine's own power factor). Signs are decided by the wake DAG and the operating point. \textbf{Law 1 (decoupling at the optimum).} At interior power-maximizing profiles the off-diagonal-to-diagonal Hessian ratio is an order of magnitude below its value at generic points (0.008--0.069 vs 0.22--0.87 in our suite). \textbf{Theorem 2 (bounded interactions).} For any coordinate-sweep method the optimality gap is bounded by the interaction energy: gap $\le \tfrac12\sum_{i\ne j}\bar M_{ij}\gbar^2$ plus a grid term, with $\bar M_{ij} = \max$ sampled $|M_{ij}|$ on the box. Proofs and numerics are in the companion paper. Everything below uses FLORIS v4.6 GCH, NREL 5\,MW, 8\,m\,s$^{-1}$, TI 0.06, wd $270^\circ$, box $[0^\circ,30^\circ]$ unless stated.
+We restate the three facts we build on. \textbf{Theorem 1 (C--S decomposition).} For the deficit-additive wake-power class $P(\gamma) = \sum_k \cos^p(\gamma_k)\tilde{v}_k^3$, every mixed partial splits into $M_{ij} = B_{ij} - A_{ij}$ with $B_{ij}\ge0$ (complementarity through shared downstream turbines) and $A_{ij}\ge0$ (substitution through a downstream turbine's own power factor). Signs are decided by the wake DAG and the operating point. \textbf{Law 1 (decoupling at the optimum).} At interior power-maximizing profiles the off-diagonal-to-diagonal Hessian ratio is an order of magnitude below its value at generic points (0.008--0.069 vs 0.22--0.87 in our suite). \textbf{Theorem 2 (bounded interactions).} For any coordinate-sweep method the optimality gap is bounded by the interaction energy: gap $\le \tfrac12\sum_{i\ne j}\bar M_{ij}\bar{\gamma}^2$ plus a grid term, with $\bar M_{ij} = \max$ sampled $|M_{ij}|$ on the box. Proofs and numerics are in the companion paper. Everything below uses FLORIS v4.6 GCH, NREL 5\,MW, 8\,m\,s$^{-1}$, TI 0.06, wd $270^\circ$, box $[0^\circ,30^\circ]$ unless stated.
 
 \section{Decoupled Jacobi Sweeps (DJS)}
 \label{sec:djs}
 
-\textbf{Algorithm 1.} Given a farm model and a box $[0,\gbar]^N$: (1) initialize $\yaw \leftarrow 0$ (or Boolean greedy); (2) repeat: for each turbine $i$ (in parallel), run an exact 1-D line search on $[0,\gbar]$ with all other components held at their current values, and update; (3) stop when the farm-power improvement of a full sweep falls below tol.
+\textbf{Algorithm 1.} Given a farm model and a box $[0,\bar{\gamma}]^N$: (1) initialize $\gamma \leftarrow 0$ (or Boolean greedy); (2) repeat: for each turbine $i$ (in parallel), run an exact 1-D line search on $[0,\bar{\gamma}]$ with all other components held at their current values, and update; (3) stop when the farm-power improvement of a full sweep falls below tol.
 
-\textbf{Why this works.} DJS is a coordinate-descent method \citep{wright2015coordinate} in its parallel (Jacobi) variant \citep{richtarik2016parallel}; the classical local linear-convergence analysis applies, and here the contraction constant is exactly the off-diagonal-to-diagonal ratio of Law~1, $\norm{\operatorname{diag}^{-1}M_{\mathrm{off}}} \ll 1$ near the optimum. The first sweep captures the dominant single-turbine effects; sweeps 2--3 resolve the residual cross-talk. No gradients, no step-size tuning, embarrassingly parallel per sweep.
+\textbf{Why this works.} DJS is a coordinate-descent method \citep{wright2015coordinate} in its parallel (Jacobi) variant \citep{richtarik2016parallel}; the classical local linear-convergence analysis applies, and here the contraction constant is exactly the off-diagonal-to-diagonal ratio of Law~1, $\left\lVert \operatorname{diag}^{-1}M_{\mathrm{off}} \right\rVert \ll 1$ near the optimum. The first sweep captures the dominant single-turbine effects; sweeps 2--3 resolve the residual cross-talk. No gradients, no step-size tuning, embarrassingly parallel per sweep.
 
 \textbf{Results (Table~1).} Line search on a $1^\circ$ grid (31 evaluations per turbine per sweep, deliberately unoptimized); SLSQP multi-start (4 starts) as reference; wall times on a single 2-core container, so absolute numbers are conservative and the comparison is what matters.
 
 \begin{table}[t]
 \caption{DJS versus multi-start SLSQP. Gaps are relative to the better of the two; sweeps counted until convergence ($\Delta P < 10^{-4}$\,kW); wall times on one 2-core container (Table~1 values from the benchmark run, Fig.~\ref{fig:djs}b from the scaling run).}
 \begin{tabular}{lccccccc}
-\toprule
+\hline
 Case & $N$ & SLSQP gain & DJS gain & gap & sweeps & $t_{\mathrm{DJS}}$ & $t_{\mathrm{SLSQP}}$ \\
-\midrule
+\hline
 3-chain & 3 & $+22.33$\,\% & $+22.33$\,\% & 0.0029\,\% & 3 & 9.0\,s & 3.4\,s \\
 $3\times3$ & 9 & $+24.13$\,\% & $+24.12$\,\% & 0.0044\,\% & 3 & 38.8\,s & 15.2\,s \\
 $4\times4$ & 16 & $+34.19$\,\% & $+34.19$\,\% & 0.0008\,\% & 3 & 89.3\,s & 35.5\,s \\
 rand16 & 16 & $+7.59$\,\% & $+7.61$\,\% & $-0.0230$\,\% & 4 & 137.7\,s & 62.0\,s \\
-\bottomrule
+\hline
 \end{tabular}
 \label{tab:djs}
 \end{table}
 
 Figure~\ref{fig:djs}a shows the convergence traces: after the first sweep, DJS has captured $\ge99$\,\% of the SLSQP gain on the structured farms (99.4 / 99.7 / 99.6\,\%) and 89.4\,\% on the 16-turbine random layout; the second sweep closes all cases to $\ge99.8$\,\%; the third sweep resolves the residual cross-talk to below 0.005\,\% on the structured farms, while the random layout ends 0.023\,\% above the SLSQP reference (a multi-start artifact). Figure~\ref{fig:djs}b shows the wall-time crossover: in serial brute-force form DJS is 2--3$\times$ slower than 4-start SLSQP at equal $N$ (e.g., 89\,s vs 36\,s at $N=16$), but every line search parallelizes across turbines, so the \emph{critical-path} time of one sweep is a single 31-evaluation line search, and golden-section search cuts the serial evaluations sixfold ($\approx5$ evaluations per line search instead of 31). Both effects flip the comparison without touching the solution quality; we kept the brute-force version in the benchmark to make the comparison unfavorable to DJS.
 
-\textbf{Where DJS is provably safe.} By Theorem 2, each sweep can only improve the bound's interaction term; and near the optimum Law 1 turns the Jacobi iteration into a contraction with spectral radius $\approx \norm{\operatorname{diag}^{-1}M_{\mathrm{off}}} \ll 1$, so sweeps converge linearly there. DJS inherits no global guarantee (no yaw optimizer has one), but it carries the same bounded-interaction certificate as greedy (Section~5), computed once per wind condition.
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{../ws_submodularity/fig11_djs_traces.png}
+\caption{(a) DJS convergence: $\ge99$\,\% of the SLSQP gain after one sweep, $\ge99.8$\,\% after two; (b) wall times of DJS versus multi-start SLSQP (log scale) at equal precision.}
+\label{fig:djs}
+\end{figure}
+
+
+\textbf{Where DJS is provably safe.} By Theorem 2, each sweep can only improve the bound's interaction term; and near the optimum Law 1 turns the Jacobi iteration into a contraction with spectral radius $\approx \left\lVert \operatorname{diag}^{-1}M_{\mathrm{off}} \right\rVert \ll 1$, so sweeps converge linearly there. DJS inherits no global guarantee (no yaw optimizer has one), but it carries the same bounded-interaction certificate as greedy (Section~5), computed once per wind condition.
 
 \section{Sign-matrix clustering for decentralized optimization}
 \label{sec:clustering}
 
-\textbf{Relation to prior decoupling schemes.} Decoupling for parallel yaw optimization was proposed by \citet{kuo2020wind} (weighted-graph wake decoupling, WGWD), whose partition is built from geometric wake-overlap weights and whose subproblems are solved by random search. Our clustering differs in three ways: the edge weights are objective-level mixed partials (so the threshold $\tau$ carries a guarantee: couplings below $\tau$ cost at most $\tau\gbar^2$ per pair, Theorem 2), the sub-solver is the certified DJS sweep rather than sampling, and the graph is signed, so complements and substitutes are distinguished, not merged.
+\textbf{Relation to prior decoupling schemes.} Decoupling for parallel yaw optimization was proposed by \citet{kuo2020wind} (weighted-graph wake decoupling, WGWD), whose partition is built from geometric wake-overlap weights and whose subproblems are solved by random search. Our clustering differs in three ways: the edge weights are objective-level mixed partials (so the threshold $\tau$ carries a guarantee: couplings below $\tau$ cost at most $\tau\bar{\gamma}^2$ per pair, Theorem 2), the sub-solver is the certified DJS sweep rather than sampling, and the graph is signed, so complements and substitutes are distinguished, not merged.
 
-\textbf{Definition.} The interaction graph $G_\tau$ of a farm at state $\yaw$ has an edge $i$--$j$ iff $|M_{ij}(\yaw)| > \tau$. Connected components of $G_\tau$ are \textbf{control clusters}: turbines that must be co-optimized at precision $\tau$; across clusters the coupling is provably below $\tau\gbar^2$ per pair.
+\textbf{Definition.} The interaction graph $G_\tau$ of a farm at state $\gamma$ has an edge $i$--$j$ iff $|M_{ij}(\gamma)| > \tau$. Connected components of $G_\tau$ are \textbf{control clusters}: turbines that must be co-optimized at precision $\tau$; across clusters the coupling is provably below $\tau\bar{\gamma}^2$ per pair.
 
 \textbf{Results.} On a $5\times5$ farm (5D $\times$ 3D, wd $270^\circ$), the sign matrix at the origin (Fig.~\ref{fig:heatmap}) is the wake DAG made quantitative: the strongest entries are the chain pairs within each column (up to 1.2\,kW\,deg$^{-2}$ in magnitude), lateral pairs are weaker and positive, and the last row's turbines are decoupled from everything ($|M_{ij}| < 0.05$). At $\tau = 0.05$\,kW\,deg$^{-2}$ the connected components are exactly the first four rows (one cluster of 20) and the last row (five singletons); the clustering is not imposed, it is read off the objective. Per-cluster SLSQP attains $+42.03$\,\% (centralized: $+42.03$\,\%, gap 0.001\,\%) in 62\,s versus 346\,s centralized (wall times vary with machine load), a 5.6$\times$ speed-up on this 25-turbine case; DJS inside each cluster removes the need for SLSQP entirely (Section~3). Sweeping $\tau$ produces a nested hierarchy of clusterings, a natural multi-resolution control architecture, and the clustering rotates with the wind direction, giving a direction-adaptive decentralized scheme whose communication graph is recomputed from one $N^2$-call sign-matrix evaluation per wind condition. Figure~\ref{fig:walltime} shows wall-time scaling with farm size: DJS grows like $N$ per sweep, SLSQP like the optimization workload it actually is.
+
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figB3_heatmap5x5.png}
+\caption{Sign matrix of the $5\times5$ farm at the origin: chain pairs dominate, lateral pairs are positive, the last row is decoupled, and thresholding at $\tau=0.05$\,kW\,deg$^{-2}$ recovers the wake DAG clusters (first four rows vs last row).}
+\label{fig:heatmap}
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figB4_walltime.png}
+\caption{Wall-time scaling with farm size: Boolean greedy (5-degree grid) and DJS grow gently, SLSQP grows like the optimization workload it is.}
+\label{fig:walltime}
+\end{figure}
+
 
 \section{The bounded-interaction certificate}
 \label{sec:cert}
 
 Theorem 2 bounds the gap of any coordinate-sweep greedy method by the interaction energy. We now evaluate the bound on fresh, previously unseen layouts: 12 random farms ($N=6$--9 turbines, wind directions $240$--$300^\circ$, seed 42), Boolean greedy on a $5^\circ$ grid versus multi-start SLSQP, and $\bar M_{ij}$ sampled at the origin plus four random points of the box. Measured gaps: \textbf{mean 0.103\,\%, max 0.477\,\%} (one case: greedy 0.009\,\% \emph{above} SLSQP, a multi-start artifact). Certificate: bound values span 0.12--7.05\,\% of farm power, in every case above the measured gap (Fig.~\ref{fig:cert}): conservative by 1--2 orders of magnitude, as a certificate should be, and computable from $N^2$ model calls, cheaper than the optimization it certifies. To our knowledge this is the first guarantee of its kind for wake steering; it subsumes the empirical record (Boolean greedy $\le0.6$\,\% \citep{stanley2022fast}; per-row greedy 0.07\,\% in our companion platform) under one mechanism: greedy fails only through interaction energy, and interaction energy is what the sign matrix measures.
+
+\begin{figure}[htbp]
+\includegraphics[width=\columnwidth]{../ws_submodularity/figB5_certificate.png}
+\caption{The certificate holds on all 12 random layouts: every measured greedy gap (mean 0.103\,\%, max 0.477\,\%) lies below the sampled interaction-energy bound (0.12--7.05\,\% of farm power).}
+\label{fig:cert}
+\end{figure}
+\clearpage
 
 \section{Discussion and outlook}
 \label{sec:discussion}
@@ -107,42 +125,26 @@ Theorem 2 bounds the gap of any coordinate-sweep greedy method by the interactio
 
 We have shown that the interaction structure of the companion paper is not just an explanation; it is a workable algorithm stack. Decoupled Jacobi sweeps exploit the near-diagonal Hessian at optima to reach SLSQP-level solutions in 2--3 parallel per-turbine passes; sign-matrix thresholding delivers certified decentralized clusterings that recover the centralized optimum at a fraction of the cost; and the interaction-energy certificate finally gives greedy methods the guarantee their 15-year empirical record deserves. All three tools rest on one structural object, the mixed-partial matrix, computed once per wind condition, and all three are stated against explicit failure boundaries (interior optima, sampled certificate, model class). The stack is the first wake-steering optimizer whose speed has a mechanism and whose gap has a bound.
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{../ws_submodularity/fig11_djs_traces.png}
-\caption{(a) DJS convergence: $\ge99$\,\% of the SLSQP gain after one sweep, $\ge99.8$\,\% after two; (b) wall times of DJS versus multi-start SLSQP (log scale) at equal precision.}
-\label{fig:djs}
-\end{figure}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{../ws_submodularity/figB3_heatmap5x5.png}
-\caption{Sign matrix of the $5\times5$ farm at the origin: chain pairs dominate, lateral pairs are positive, the last row is decoupled, and thresholding at $\tau=0.05$\,kW\,deg$^{-2}$ recovers the wake DAG clusters (first four rows vs last row).}
-\label{fig:heatmap}
-\end{figure}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{../ws_submodularity/figB4_walltime.png}
-\caption{Wall-time scaling with farm size: Boolean greedy (5-degree grid) and DJS grow gently, SLSQP grows like the optimization workload it is.}
-\label{fig:walltime}
-\end{figure}
 
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{../ws_submodularity/figB5_certificate.png}
-\caption{The certificate holds on all 12 random layouts: every measured greedy gap (mean 0.103\,\%, max 0.477\,\%) lies below the sampled interaction-energy bound (0.12--7.05\,\% of farm power).}
-\label{fig:cert}
-\end{figure}
 
 
 \codedataavailability{All code, experiment scripts, caches, figures, and manuscript sources are available in the GitHub repository \texttt{github.com/sunccchengze/123} under \texttt{research/} (FLORIS 4.6.6, Python 3.11).}
-\acknowledgements{The author thanks the FLORIS developers for the open-source modeling platform.}
-\authorcontribution{The sole author performed all aspects of this work: conceptualization, methodology, formal analysis, software, validation, writing, and visualization.}
-\competinginterests{The author declares that no competing interests are present.}
+
 \appendix
 \section{Reproduction}
 \label{app:repro}
 
 \texttt{exp\_djs.py} (DJS benchmark table; $5\times5$ clustering), \texttt{exp\_experiments2.py} (12-layout certificate benchmark; $5\times5$ sign matrix; wall-time scaling), \texttt{exp\_traces\_fix.py} (Table~1 gaps and times), \texttt{make\_figures2.py}. FLORIS 4.6.6, \texttt{default\_inputs.yaml}, 8\,m\,s$^{-1}$, TI 0.06, wd $270^\circ$, box $[0^\circ,30^\circ]$. Finite differences central, $h=5^\circ$. Evaluations at simultaneous extreme yaw ($\ge25^\circ$ on many turbines) produce negative-velocity warnings in FLORIS and are excluded from claims. The certificate benchmark's random layouts are seed-42 draws, reproducible exactly.
 
-\bibliography{refs}
+\noappendix
+
+\authorcontribution{The sole author performed all aspects of this work: conceptualization, methodology, formal analysis, software, validation, writing, and visualization.}
+\competinginterests{The author declares that no competing interests are present.}
+\acknowledgements{The author thanks the FLORIS developers for the open-source modeling platform.}
+
 \bibliographystyle{copernicus}
+\bibliography{refs}
 
 \end{document}
