@@ -43,14 +43,14 @@
 
 ## 论文二/三 算法侧审计（2026-08-30 补充）
 - `"coordinate descent" OR "Jacobi" OR "parallel" yaw optimization` → 命中 **Kuo et al. 2020, Energies 13(4):865 (WGWD)**：几何尾流重叠加权图解耦 + 并行随机搜索。→ 与我方区别：权重是几何重叠而非目标函数混合偏导；子求解器是无证书随机搜索；无符号区分。已在 Paper 2 正面引用并区分。
-- `wind farm power tracking yaw inverse bisection monotonic` → 命中 APC 文献（Tamaro et al. 2025, WES 10:2705：yaw/induction setpoint 查表 + PI 闭环；Quick 2021 setpoint uncertainty）。→ 均无逆映射单调性结构分析/精确反演。已在 Paper 3 引用并区分。
+- `wind farm power tracking yaw inverse bisection monotonic` → 当时仅定位到 APC 文献（Tamaro et al. 2025、Quick 2021）。**此条已被 2026-08-31 第四轮审计补正并取代**：检出 Starke et al. 2023、Oudich et al. 2023、Sterle et al. 2024 和 Tamaro et al. 2026 等实质相邻/直接先例；见文末 P3 更正记录。
 - 并行坐标下降/坐标下降理论（Richtárik & Takáč; Wright 2015）为通用算法基座，作为方法学引用，不构成创新点冲突。
 
 ## 终局复核（2026-08-30，成稿后第三轮）
 - EN 新措辞：`"strategic complements" OR "strategic substitutes" wake steering yaw` → 0 相关命中（仅无关的尾流控制论文）。经济学词汇在偏航领域确无先例使用。
 - ZH 通道：`偏航优化 风电场 混合偏导 交互 互补 替代 解耦` → 仅命中 DFIG 电气解耦（电力电子，与尾流控制无关）。
 - 代码通道：GitHub code search 因 gh 令牌失效未执行（环境问题，待用户重连）；网页替代检索 `github wake steering interaction matrix hessian` → 无结构分析先例，仅有 BFGS 拟牛顿（优化器用途，非结构发现）。
-- 结论不变：核心三创新点（C−S 相结构 / 最优点解耦 + 交互能界 / 逆问题射线单调 + 二分反演）在全部已执行通道上无先例；相邻文献全部定位、引用并区分（详见前两节）。
+- 该轮当时的结论后来被 P3 第四轮检索部分推翻：C−S 相结构与最优点解耦的检索结论仍需独立复查，但“逆问题射线单调 + 二分反演”不能再被列为已无先例的核心创新；见文末 P3 更正记录。
 
 ## GitHub 代码通道补完（2026-08-31，gh 重连后）
 查询集（gh api search/code，全部 code 索引）：
@@ -76,4 +76,44 @@
 - 模型稳健性扩展：cc（LES 标定）符号翻转复现 +0.388→−0.154；empirical_gauss（Sedini 现场标定）翻转复现 +0.022→−0.114，但其 5D 尾流弱（2T 增益≈0、od/diag 原点即 0.066→最优 0.085）——弱尾流区解耦"平凡成立"而非"涌现"，论文一 §9.2 如实区分两个区制。
 - AEP：12 方向风玫瑰 +7.28%。
 - 风速扫描 6–10 m/s：gauss 增益 +28.4→+21.5%，解耦比最优处 0.020–0.147 全部 ≤0.15。
-- 论文三数字复跑确认：二分反演误差 1e-5–1e-7 kW；双线性代理 60.2783 kW（0.6003% Pmax）。
+- 论文三旧版复跑（历史记录，**不是当前 Table 2 比较**）：二分反演误差 1e-5–1e-7 kW；双线性代理 60.2783 kW（0.6003% Pmax）。当前匹配九目标协议见文末：最大 Brent 残差 0.00078209 kW、五节点代理 51.89370 kW（0.51679% endpoint power）。
+
+## P3 第四轮新颖性与证据等级更正（2026-08-31）
+
+### 触发与结论
+- 触发：对“偏航功率跟踪/射线反演/二分”主张进行重新联网检索，并按原始页或 Crossref 元数据复核。
+- **结论：P3 原先的宽泛创新叙事作废。** “偏航功率跟踪”“通过 yaw 扩展储备/跟踪范围”“功率目标下的 yaw setpoint 调度”均已有直接实质先例；不能再声称领域回避该问题、这是第一种 yaw power-tracking scheme、或静态数值扫描构成 well-posedness certificate。
+
+### 本轮查询与命中
+1. `"Yaw-Augmented Control for Wind Farm Power Tracking" 2023 Starke Meneveau King Gayme`
+   - **Starke, Meneveau, King, and Gayme (ACC 2023)**, *Yaw-Augmented Control for Wind Farm Power Tracking*, pp. 184–191, DOI [10.23919/ACC55779.2023.10156444](https://api.crossref.org/works/10.23919/ACC55779.2023.10156444).
+   - IEEE/OSTI 摘要明确：动态 yaw outer loop 加 pitch inner loop，在 LES 风电场跟踪两条功率轨迹。它直接反驳“yaw power tracking 不存在”的说法。
+2. `"Providing power reserve for secondary grid frequency regulation of offshore wind farms through yaw control"`
+   - **Oudich, Gyselinck, De Belie, and Kinnaert (2023)**, *Wind Energy* 26, 850–873, DOI [10.1002/we.2845](https://api.crossref.org/works/10.1002/we.2845).
+   - 静态 wake model + FAST.Farm 瞬态评估，用分布式 yaw 优化考察 FRR 的功率储备与响应时间；是 P3 “静态 yaw/储备”层面的直接近邻。
+3. `"Model predictive control of wakes for wind farm power tracking" Sterle Hans Raisch`
+   - **Sterle, Hans, and Raisch (2024)**, *Journal of Physics: Conference Series* 2767, 032005, DOI [10.1088/1742-6596/2767/3/032005](https://api.crossref.org/works/10.1088/1742-6596/2767/3/032005).
+   - 在线 MPC 用 yaw 与 axial induction 追踪 reference，含尾流动态与实时能力论证；是比 P3 更宽的动态控制先例。
+4. `wind farm yaw power setpoint tracking pitch induction dynamic control reference 2020 2026`
+   - **Tamaro, Campagnolo, and Bottasso (2025)**, *Wind Energy Science* 10, 2705–2728, DOI [10.5194/wes-10-2705-2025](https://wes.copernicus.org/articles/10/2705/2025/): yaw+induction、离线 setpoint scheduler 与 PI 闭环，在 LES-ALM 下比较 APC。
+   - **Tamaro, Bortolin, Campagnolo, Mühle, and Bottasso (2026)**, *Wind Energy Science* 11, 1607–1630, DOI [10.5194/wes-11-1607-2026](https://wes.copernicus.org/articles/11/1607/2026/): 最大储备 APC 的缩比风洞验证，含动态风向、功率跟踪、疲劳和执行器占空比。这是当前日期下必须引用的最新直接 WES 工作。
+5. `"wind farm power tracking" yaw control inverse monotonicity bisection`、`"inverse" "yaw" "power target" wind farm wake steering`
+   - 本轮未检出把“已证明严格单调的静态 yaw profile ray”与标量逆映射联合作为核心贡献的直接文献；但检索受查询/索引范围限制，**不能把未命中写成 first/不存在**。
+
+### 自我证伪：P3 的数学与实验表述
+- 现有 `THEORY.md` 不包含对九机 FLORIS ray 的连续单调性证明；原稿将 41 个节点的非递减误写成 certificate。数值发现不等于定理，已按 interaction-structure-miner 的“诚实边界”降级为有限网格 screen。
+- 原稿的全区间 inverse-Lipschitz 和 ``K-monotone'' 表述没有在该仓库中找到可审计推导。尤其导数下界 $c>0$ 是 inverse-Lipschitz 的前提，不能由离散 trace 推出；这些无支撑主张已从 P3 删除。
+- 即使连续性给出端点间至少一个根，单调性只负责唯一性；Brent/bisection 的根搜索与“唯一 inverse map”不能混为一谈。
+- 当前 41 点与 401 点 trace 都只支持一个 FLORIS 4.6.6、8 m/s、TI=0.06、wd=270° 的数值观察。401 点最小相邻增量为 0.231771 kW；它不是连续导数的下界或验证式证明。
+
+### 当前可复现数字与公平性
+- `expcache/ray_monotonicity.json`：41 点 operational screen 和 401 点 retrospective diagnostic，均明确标为 finite-grid evidence。
+- `expcache/table2_tracking.json` 与 `proxy_tracking_benchmark.json`：同一个预先定义的九个**内部** targets（观测端点增益的 5%–99%，8192.46–10021.99 kW）。
+- 端点为 $P_0=8095.147893676136$ kW、$P_1=10041.457351172001$ kW；不得把内部九点称为完整 attainable range。
+- 当前同网格最大残差：Brent $0.0007820919527148362$ kW；五节点 proxy $51.89370445068744$ kW，即端点功率的 $0.5167945511876381$%。图 C1/C3/C4 读取同一缓存；生成 C4 前对 target arrays 做 exact equality assertion。
+- 此处只可称 implementation-specific accuracy comparison。proxy 的五个离线节点与 Brent 的每目标 7–11 次 evaluator calls 不是 matched online budget，故不得声称速度/实时性优势。
+
+### 处置与剩余风险
+- P3 已改为“static ray-inversion benchmark”的诚实定位，并正面引用 Oudich、Starke、Sterle 与 Tamaro 的工作。
+- **投稿闸门：当前 P3 不应作为独立 WES 研究论文提交。** 若要恢复独立稿件资格，至少需要：(a) 可审计的解析或 validated-numerics 连续单调性/唯一性结果，且明确模型域；(b) 跨布局、来流、模型和不确定性的预注册测试；(c) 与有动态、负载和执行器约束的 APC 基线进行同口径比较；(d) 在完成这些工作后重新执行六通道新颖性审计。
+- 这不会自动推翻 P1/P2，但 P1/P2 的定理、数值范围、比较基线和新颖性也必须各自独立再审，不能借用 P3 的旧结论。

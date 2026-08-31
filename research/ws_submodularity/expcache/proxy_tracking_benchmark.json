@@ -17,6 +17,12 @@
       0.0
     ]
   },
+  "target_protocol": {
+    "count": 9,
+    "lower_fraction_of_observed_ray_gain": 0.05,
+    "upper_fraction_of_observed_ray_gain": 0.99,
+    "description": "Nine equally spaced interior targets from 5% through 99% of the observed ray gain."
+  },
   "protocol": "Five-node piecewise-linear slice of the browser bilinear proxy, inverted by first-ascending-interval reverse search; evaluated on the same nine targets as table2_tracking.json.",
   "grid_t": [
     0.0,
@@ -54,6 +60,7 @@
     3.5544975158245506,
     16.627916863568316
   ],
+  "P0_kW": 8095.147893676136,
   "Pmax_kW": 10041.457351172001,
   "max_error_kW": 51.89370445068744,
   "max_error_pct_of_Pmax": 0.5167945511876381

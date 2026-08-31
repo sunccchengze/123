@@ -98,3 +98,18 @@
 4. 最终静态预检确认三篇均使用 `\documentclass[wes, manuscript]{copernicus}`、无作者额外 package/宏/`\paragraph`，作者邮箱一致；每一张保留图均在首次 `\ref` 之后、conclusions 之前。三篇各自两遍回退编译均为 0 LaTeX error、0 未定义引用和 0 未定义文献。P3 还直接断言 exact/proxy 的九个 target 数组逐项相同，最大误差为 $7.8209\times10^{-4}$ / 51.8937 kW，Fig. C4 为 1440$\times$1020 px、约 300 dpi。
 
 **结论**：这一轮修的是出版对象的结构一致性，而不是新增科学证据。真实 `copernicus.cls` 编译、永久 DOI 存档、作者对交叉稿件重叠的判断，以及 WES 对生成式 AI 文本/解释的政策阻塞仍然存在；不能因本地 PDF 好看就把状态改写为“可直接投稿”。
+
+## 审计点 #8（2026-08-31，用户追问“是否完全无法挑剔”后的第四轮反证）
+
+**当时的自负**：P3 已有 Table 1/2、同格 proxy cache、41 点 trace 和本地 PDF，就把“inverse-monotonicity / well-posedness certificate”当成了可投的独立创新。
+
+**反省动作与新发现**：
+
+1. **直接先例漏检，且不是一个。** 重新检索并从 IEEE/OSTI、Crossref、WES 原文核验后，发现 Starke et al. (ACC 2023, doi:10.23919/ACC55779.2023.10156444) 已用动态 yaw outer loop + pitch inner loop 在 LES 中跟踪两条功率轨迹；Oudich et al. (Wind Energy 2023, doi:10.1002/we.2845) 已以 yaw 优化评估 FRR reserve；Sterle et al. (JPCS 2024, doi:10.1088/1742-6596/2767/3/032005) 已做 yaw+induction MPC power tracking；Tamaro et al. 的 WES 2025 及其 2026 缩比风洞 APC 论文（doi:10.5194/wes-11-1607-2026）均直接相关。原来的“领域回避 inverse / first yaw tracking / new operating mode”表述不可成立，全部撤销并在 `NOVELTY_DOSSIER.md` 留档。
+2. **把采样当证明是实质性方法错误。** 仓库的 `THEORY.md` 没有九机 FLORIS ray 的连续单调性证明，也没有原稿声称的 `K-monotone` 推导。41 个非递减节点只能是 screen；额外复跑的 401 节点也只能提高同一模型/工况下的数值证据密度。它们均不能给出采样间连续单调、唯一根、导数下界或 inverse-Lipschitz certificate。原稿的“theorem / certificate / guaranteed”叙事已从 P3 删除。
+3. **重新检查标量数学。** 连续响应的端点异号/夹值本身已足够让 bracketed root finder 找到一个根；严格单调才给唯一逆映射。此前把“可以 bracket root”和“已经定义唯一 inverse map”混为一谈。现在仅保留有明确前提的标准条件结论，不把它包装成新定理。
+4. **重新检查比较设计。** 九个 8192--10022 kW 目标是端点增益的 5--99% 内部网格，不是完整端点区间 [8095.15, 10041.46] kW。五节点 proxy 的离线 5 次评估与 Brent 的每目标 7--11 次调用也不是同一在线预算；目前只报告同 targets 的 implementation-specific residual comparison，不声称速度、实时性或控制优越性。
+5. **代码和图的防漂移整改。** `exp_inverse.py` 现在写入 `ray_monotonicity.json`（含 41 和 401 点 raw traces/解释）并将目标协议写入 proxy cache；`make_figures2.py` 的 C1/C3/C4 全部读取缓存，且在绘图前断言 exact/proxy targets 完全相同。复跑结果：最大 Brent residual $0.0007820919527148362$ kW；五节点 proxy $51.89370445068744$ kW（$0.5167945511876381$% endpoint power）；401 点最小相邻增量 0.231771 kW；两机故意 overshoot ray 的最小相邻增量 −2.933336 kW。
+6. **写作审查不等于投稿合规。** 新建并执行 `scholarly-clarity-auditor` 规则：每句强断言按 proof/conditional/numerical/benchmark/interpretation 分类，检索 first/certificate/guarantee 等词，且不把“humanizer”当作规避 WES AI policy 的工具。P3 的英文 TeX/Markdown 已按该规则重写；作者仍必须独立重写、核验并决定其政策合规性。
+
+**结论与处置**：P3 当前只能诚实地作为一个带完整缓存的“static ray-inversion benchmark”研究记录，**不能作为独立 WES 研究论文投稿**。要恢复投稿候选资格，必须先有可审计的解析/validated-numerics 单调性与唯一性结果、跨工况/模型/不确定性的严谨测试，以及与动态 APC 的同口径比较。P1/P2 不因 P3 以外的任何旧审计结论自动免检；下一轮应从它们的数学命题、先例和基线分别重审。

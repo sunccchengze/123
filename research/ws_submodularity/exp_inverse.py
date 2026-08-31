@@ -1,9 +1,10 @@
-"""Reproduce the wake-steering inverse benchmark and archive its inputs.
+"""Reproduce and archive the wake-steering ray-inversion benchmark.
 
-The exact ray inversion and the five-node proxy baseline are deliberately
-scored on the same nine targets.  The script writes the two JSON caches used by
-Paper 3 and Figure C4, so the reported comparison cannot silently drift to a
-different target set.
+The exact ray inversion and five-node proxy baseline are deliberately scored on
+the same nine targets.  In addition to their matched-target caches, the script
+records a 41-point operational monotonicity screen and a denser 401-point
+retrospective diagnostic.  A finite grid is evidence for the test case, not a
+proof of continuous monotonicity or an inverse-map guarantee.
 
 Environment: Python 3.11, FLORIS 4.6.6, SciPy.
 """
@@ -36,46 +37,131 @@ def power(fm: FlorisModel, yaw) -> float:
     return float(fm.get_farm_power().sum() / 1e3)
 
 
-print("=== Ray response monotonicity ===")
+def trace_record(ts: np.ndarray, values: np.ndarray, profile_deg: np.ndarray) -> dict:
+    """Return raw trace values plus only finite-grid monotonicity diagnostics."""
+    increments = np.diff(values)
+    maximum_index = int(np.argmax(values))
+    return {
+        "profile_deg": [float(value) for value in profile_deg],
+        "sample_t": [float(value) for value in ts],
+        "power_kW": [float(value) for value in values],
+        "sample_count": int(len(ts)),
+        "monotone_nondecreasing_at_samples": bool(np.all(increments >= -1e-9)),
+        "minimum_adjacent_increment_kW": float(np.min(increments)),
+        "maximum_power_kW": float(values[maximum_index]),
+        "maximum_power_at_t": float(ts[maximum_index]),
+    }
+
+
+print("=== Ray-response monotonicity screens ===")
 ts = np.linspace(0.0, 1.0, 41)
 
 # Two turbines: the 30-degree ray deliberately overshoots the 5D optimum.
 fm2 = make([0.0, 5.0 * D_ROTOR], [0.0, 0.0])
-p2 = np.asarray([power(fm2, [30.0 * t, 0.0]) for t in ts])
+profile2 = np.asarray([30.0, 0.0])
+p2 = np.asarray([power(fm2, profile2 * t) for t in ts])
+trace2 = trace_record(ts, p2, profile2)
 print(
-    "2T ray (30t, 0): P(0)=%.2f P(30)=%.2f monotone-nondecreasing=%s"
-    % (p2[0], p2[-1], bool(np.all(np.diff(p2) >= -1e-9)))
+    "2T ray [30,0]t: sampled-nondecreasing=%s; min adjacent increment=%.6f kW"
+    % (trace2["monotone_nondecreasing_at_samples"], trace2["minimum_adjacent_increment_kW"])
 )
 
 fm3 = make([0.0, 5.0 * D_ROTOR, 10.0 * D_ROTOR], [0.0, 0.0, 0.0])
-p3 = np.asarray([power(fm3, [30.0 * t, 22.6 * t, 0.0]) for t in ts])
+profile3 = np.asarray([30.0, 22.6, 0.0])
+p3 = np.asarray([power(fm3, profile3 * t) for t in ts])
+trace3 = trace_record(ts, p3, profile3)
 print(
-    "3-chain ray [30,22.6,0]t: monotone=%s P_max=%.2f at t=%.3f"
-    % (bool(np.all(np.diff(p3) >= -1e-9)), p3.max(), ts[p3.argmax()])
+    "3-chain ray [30,22.6,0]t: sampled-nondecreasing=%s; Pmax=%.2f kW at t=%.3f"
+    % (
+        trace3["monotone_nondecreasing_at_samples"],
+        trace3["maximum_power_kW"],
+        trace3["maximum_power_at_t"],
+    )
 )
 
 x9 = [row * 5.0 * D_ROTOR for row in range(3) for _ in range(3)]
 y9 = [(column - 1) * 3.0 * D_ROTOR for _ in range(3) for column in range(3)]
 fm9 = make(x9, y9)
-profile = np.asarray([30.0, 30.0, 30.0, 20.0, 20.0, 20.0, 0.0, 0.0, 0.0])
+profile9 = np.asarray([30.0, 30.0, 30.0, 20.0, 20.0, 20.0, 0.0, 0.0, 0.0])
 
 
 def ray_power(t: float) -> float:
-    return power(fm9, profile * t)
+    return power(fm9, profile9 * t)
+
 
 p9 = np.asarray([ray_power(t) for t in ts])
+trace9 = trace_record(ts, p9, profile9)
 print(
-    "3x3 ray [30,30,30,20,20,20,0,0,0]t: monotone=%s P_max=%.2f at t=%.3f"
-    % (bool(np.all(np.diff(p9) >= -1e-9)), p9.max(), ts[p9.argmax()])
+    "3x3 ray [30,30,30,20,20,20,0,0,0]t: sampled-nondecreasing=%s; Pmax=%.2f kW at t=%.3f"
+    % (
+        trace9["monotone_nondecreasing_at_samples"],
+        trace9["maximum_power_kW"],
+        trace9["maximum_power_at_t"],
+    )
+)
+
+# This retrospective dense check strengthens the numerical diagnostic for the
+# reported condition, but deliberately remains labelled as a finite-grid check.
+dense_ts = np.linspace(0.0, 1.0, 401)
+dense_p9 = np.asarray([ray_power(t) for t in dense_ts])
+dense_trace9 = trace_record(dense_ts, dense_p9, profile9)
+print(
+    "3x3 retrospective 401-point screen: sampled-nondecreasing=%s; min adjacent increment=%.6f kW"
+    % (
+        dense_trace9["monotone_nondecreasing_at_samples"],
+        dense_trace9["minimum_adjacent_increment_kW"],
+    )
+)
+
+conditions = {
+    "floris_version": floris.__version__,
+    "wind_speed_m_per_s": 8.0,
+    "wind_direction_deg": 270.0,
+    "turbulence_intensity": 0.06,
+    "layout": "3x3, 5D streamwise by 3D lateral",
+    "profile_deg": profile9.tolist(),
+}
+(CACHE / "ray_monotonicity.json").write_text(
+    json.dumps(
+        {
+            "schema_version": 1,
+            "conditions": conditions,
+            "operational_41_point_screen": {
+                "interpretation": (
+                    "Finite-grid empirical screen only; it does not establish continuous "
+                    "monotonicity or a formal inverse-map guarantee."
+                ),
+                "traces": {
+                    "two_turbine_30_0": trace2,
+                    "three_turbine_30_22p6_0": trace3,
+                    "three_by_three_30_30_30_20_20_20_0_0_0": trace9,
+                },
+            },
+            "retrospective_401_point_three_by_three_screen": {
+                "interpretation": (
+                    "Denser finite-grid diagnostic for the one reported condition; still not "
+                    "a continuous monotonicity proof."
+                ),
+                "trace": dense_trace9,
+            },
+        },
+        indent=2,
+    )
 )
 
 print()
 print("=== Matched-target exact inverse and five-node proxy ===")
 p0 = float(p9[0])
-pmax = float(p9.max())
-# This is the explicit nine-target protocol used in Table 2, Figure C3, and
-# Figure C4: 5% through 99% of the observed attainable ray range.
-targets = np.linspace(p0 + 0.05 * (pmax - p0), pmax - 0.01 * (pmax - p0), 9)
+pmax = float(p9[-1])
+# This explicit protocol is used by Table 2, Figure C3, and Figure C4: nine
+# equally spaced interior targets, from 5% through 99% of the observed ray gain.
+target_lower_fraction = 0.05
+target_upper_fraction = 0.99
+targets = np.linspace(
+    p0 + target_lower_fraction * (pmax - p0),
+    p0 + target_upper_fraction * (pmax - p0),
+    9,
+)
 
 
 class Tracker:
@@ -101,10 +187,13 @@ for target in targets:
             "calls": int(tracker.calls),
         }
     )
-    print("  exact: P*=%8.2f kW -> t*=%.4f, error=%.2e kW, calls=%d" % (target, t_star, error, tracker.calls))
+    print(
+        "  exact: P*=%8.2f kW -> t*=%.4f, error=%.2e kW, calls=%d"
+        % (target, t_star, error, tracker.calls)
+    )
 
-# The browser implementation uses a bilinear proxy.  Along one fixed profile
-# ray its one-dimensional slice is the following five-node piecewise-linear
+# The browser implementation uses a bilinear proxy. Along one fixed profile ray
+# its one-dimensional slice is the following five-node piecewise-linear
 # interpolant, inverted by its first ascending interval (reverse search).
 grid_t = np.asarray([0.0, 0.25, 0.5, 0.75, 1.0])
 grid_power = np.asarray([ray_power(t) for t in grid_t])
@@ -124,21 +213,22 @@ for target in targets:
 
 proxy_max_error = float(max(proxy_errors))
 proxy_max_pct = float(proxy_max_error / pmax * 100.0)
-print("  proxy: maximum error = %.4f kW (%.4f %% of Pmax) over the same nine targets" % (proxy_max_error, proxy_max_pct))
+print(
+    "  proxy: maximum error = %.4f kW (%.4f %% of Pmax) over the same nine targets"
+    % (proxy_max_error, proxy_max_pct)
+)
 
-conditions = {
-    "floris_version": floris.__version__,
-    "wind_speed_m_per_s": 8.0,
-    "wind_direction_deg": 270.0,
-    "turbulence_intensity": 0.06,
-    "layout": "3x3, 5D streamwise by 3D lateral",
-    "profile_deg": profile.tolist(),
-}
 (CACHE / "table2_tracking.json").write_text(json.dumps(exact_records, indent=2))
 (CACHE / "proxy_tracking_benchmark.json").write_text(
     json.dumps(
         {
             "conditions": conditions,
+            "target_protocol": {
+                "count": 9,
+                "lower_fraction_of_observed_ray_gain": target_lower_fraction,
+                "upper_fraction_of_observed_ray_gain": target_upper_fraction,
+                "description": "Nine equally spaced interior targets from 5% through 99% of the observed ray gain.",
+            },
             "protocol": (
                 "Five-node piecewise-linear slice of the browser bilinear proxy, "
                 "inverted by first-ascending-interval reverse search; evaluated on "
@@ -148,6 +238,7 @@ conditions = {
             "grid_power_kW": grid_power.tolist(),
             "targets_kW": targets.tolist(),
             "errors_kW": [float(error) for error in proxy_errors],
+            "P0_kW": p0,
             "Pmax_kW": pmax,
             "max_error_kW": proxy_max_error,
             "max_error_pct_of_Pmax": proxy_max_pct,
@@ -155,4 +246,7 @@ conditions = {
         indent=2,
     )
 )
-print("Wrote expcache/table2_tracking.json and expcache/proxy_tracking_benchmark.json")
+print(
+    "Wrote expcache/ray_monotonicity.json, table2_tracking.json, and "
+    "proxy_tracking_benchmark.json"
+)

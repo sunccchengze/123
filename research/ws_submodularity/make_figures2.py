@@ -164,37 +164,49 @@ ax.set_title("Bounded-interaction certificate, 12 random layouts")
 ax.legend(fontsize=8)
 fig.tight_layout(); fig.savefig(D/"figB5_certificate.png"); plt.close(fig)
 
+# ---------------- Paper 3: cache-backed figures ----------------
+# The operational 41-point rays, exact inversions, and proxy comparison are
+# read from experiment caches. This prevents Table 2 and Figs. C1/C3/C4 from
+# silently drifting to separately recomputed target grids or traces.
+tracking_path = CACHE / "table2_tracking.json"
+proxy_path = CACHE / "proxy_tracking_benchmark.json"
+ray_path = CACHE / "ray_monotonicity.json"
+if not tracking_path.exists() or not proxy_path.exists() or not ray_path.exists():
+    raise RuntimeError(
+        "Run exp_inverse.py to regenerate the ray-screen and matched-target tracking caches."
+    )
+tracking_records = json.loads(tracking_path.read_text())
+proxy_benchmark = json.loads(proxy_path.read_text())
+ray_benchmark = json.loads(ray_path.read_text())
+exact_targets = np.asarray([float(record["target"]) for record in tracking_records])
+proxy_targets = np.asarray(proxy_benchmark["targets_kW"], dtype=float)
+if exact_targets.shape != proxy_targets.shape or not np.allclose(
+    exact_targets, proxy_targets, rtol=0.0, atol=1e-8
+):
+    raise RuntimeError("Proxy and exact benchmark target grids differ; refusing to draw an unfair comparison.")
+
 # ---------------- Paper 3: figC1 rays ----------------
-# 2T ray [30,0] (non-monotone past peak), 3-chain ray, 3x3 ray — recompute cheaply
-import floris
-from floris import FlorisModel
-pkg = pathlib.Path(floris.__file__).parent
-Dm = 126.0
-def make(xs, ys, wd=270.0):
-    fm = FlorisModel(str(pkg/"default_inputs.yaml")); fm.set(layout_x=xs, layout_y=ys)
-    fm.set(wind_speeds=[8.0], wind_directions=[wd], turbulence_intensities=[0.06]); return fm
-def power(fm, yaw):
-    fm.set(yaw_angles=np.asarray(yaw, dtype=float).reshape(1,-1)); fm.run()
-    return float(fm.get_farm_power().sum()/1e3)
-x9 = [r*5*Dm for r in range(3) for c in range(3)]
-y9 = [(c-1)*3*Dm for r in range(3) for c in range(3)]
+traces = ray_benchmark["operational_41_point_screen"]["traces"]
+trace_specs = [
+    ("two_turbine_30_0", "2T ray [30,0]·t"),
+    ("three_turbine_30_22p6_0", "3-chain ray [30,22.6,0]·t"),
+    ("three_by_three_30_30_30_20_20_20_0_0_0", "3×3 ray [30,30,30,20,20,20,0,0,0]·t"),
+]
+ts = np.asarray(traces[trace_specs[0][0]]["sample_t"], dtype=float)
 rays = {}
-fm2 = make([0, 630], [0, 0])
-ts = np.linspace(0, 1, 41)
-rays["2T ray [30,0]·t"] = np.array([power(fm2, [30*t, 0]) for t in ts])
-fm3 = make([0, 630, 1260], [0, 0, 0])
-rays["3-chain ray [30,22.6,0]·t"] = np.array([power(fm3, [30*t, 22.6*t, 0]) for t in ts])
-fm9 = make(x9, y9)
-prof = np.array([30,30,30,20,20,20,0,0,0])
-rays["3×3 ray [30,30,30,20,20,20,0,0,0]·t"] = np.array([power(fm9, prof*t) for t in ts])
+for key, label in trace_specs:
+    trace = traces[key]
+    trace_t = np.asarray(trace["sample_t"], dtype=float)
+    if trace_t.shape != ts.shape or not np.allclose(trace_t, ts, rtol=0.0, atol=1e-12):
+        raise RuntimeError("Ray traces do not share the declared 41-point grid.")
+    rays[label] = np.asarray(trace["power_kW"], dtype=float)
 fig, ax = plt.subplots(figsize=(5.2, 3.6))
-for k, (name, P) in enumerate(rays.items()):
-    ax.plot(ts, (P-P[0])/(P.max()-P[0])*100, "o-", ms=3, lw=1.3, label=name)
+for name, powers in rays.items():
+    ax.plot(ts, (powers - powers[0]) / (powers.max() - powers[0]) * 100, "o-", ms=3, lw=1.3, label=name)
 ax.set_xlabel("ray parameter t"); ax.set_ylabel("share of available gain [%]")
 ax.set_title("Power response along profile rays")
 ax.legend(fontsize=7)
 fig.tight_layout(); fig.savefig(D/"figC1_rays.png"); plt.close(fig)
-np.save(D/"expcache/rays.npy", {k: v for k, v in rays.items()}, allow_pickle=True)
 
 # ---------------- Paper 3: figC2 quasi-concavity (reuse qc) ----------------
 fig, ax = plt.subplots(figsize=(4.8, 3.4))
@@ -208,44 +220,26 @@ ax.legend(fontsize=8)
 fig.tight_layout(); fig.savefig(D/"figC2_quasiconcavity.png"); plt.close(fig)
 
 # ---------------- Paper 3: figC3 bisection iteration study ----------------
-from scipy.optimize import brentq
-P0 = rays["3×3 ray [30,30,30,20,20,20,0,0,0]·t"][0]
-Pmax = rays["3×3 ray [30,30,30,20,20,20,0,0,0]·t"].max()
-def Pt(t): return power(fm9, prof*t)
-class Tracker:
-    def __init__(self, target):
-        self.target = target; self.calls = 0
-    def f(self, t):
-        self.calls += 1
-        return Pt(t) - self.target
-targets = np.linspace(P0 + 0.05*(Pmax-P0), Pmax - 0.01*(Pmax-P0), 9)
-recs = []
-for Pstar in targets:
-    trk = Tracker(Pstar)
-    tstar = brentq(trk.f, 0.0, 1.0, xtol=1e-6, rtol=1e-6)
-    err = abs(Pt(tstar) - Pstar)
-    recs.append((Pstar, tstar, err, trk.calls))
 fig, ax = plt.subplots(figsize=(4.8, 3.2))
-ax.semilogy([r[3] for r in recs], [r[2] for r in recs], "o-", lw=1.3)
+ax.semilogy(
+    [int(record["calls"]) for record in tracking_records],
+    [float(record["err"]) for record in tracking_records],
+    "o-",
+    lw=1.3,
+)
 ax.set_xlabel("model evaluations"); ax.set_ylabel("|tracking error| [kW]")
-ax.set_title("Bisection on the ray: error vs evaluation budget")
+ax.set_title("Bracketed ray inversion: error vs evaluation budget")
 fig.tight_layout(); fig.savefig(D/"figC3_bisection.png"); plt.close(fig)
-print("bisection study:", [(f"{r[0]:.0f}", r[3], f"{r[2]:.2e}") for r in recs])
+print(
+    "ray-inversion study:",
+    [
+        (f"{float(record['target']):.0f}", int(record["calls"]), f"{float(record['err']):.2e}")
+        for record in tracking_records
+    ],
+)
 
 # ---------------- Appendix C Fig. C4: proxy versus exact inverse ----------------
-# Both bars are read from one matched-target benchmark: nine targets shared by
-# Table 2, the exact ray inversion, and the five-node proxy slice.  This avoids
-# comparing maxima measured on different target grids.
-tracking_path = CACHE / "table2_tracking.json"
-proxy_path = CACHE / "proxy_tracking_benchmark.json"
-if not tracking_path.exists() or not proxy_path.exists():
-    raise RuntimeError("Run exp_inverse.py to regenerate the matched-target tracking caches.")
-tracking_records = json.loads(tracking_path.read_text())
-proxy_benchmark = json.loads(proxy_path.read_text())
-exact_targets = np.asarray([float(record["target"]) for record in tracking_records])
-proxy_targets = np.asarray(proxy_benchmark["targets_kW"], dtype=float)
-if exact_targets.shape != proxy_targets.shape or not np.allclose(exact_targets, proxy_targets, rtol=0.0, atol=1e-8):
-    raise RuntimeError("Proxy and exact benchmark target grids differ; refusing to draw an unfair comparison.")
+# Both bars use the cache-backed nine-target benchmark already validated above.
 exact_max_error = max(float(record["err"]) for record in tracking_records)
 proxy_max_error = float(proxy_benchmark["max_error_kW"])
 fig, ax = plt.subplots(figsize=(4.8, 3.4))
