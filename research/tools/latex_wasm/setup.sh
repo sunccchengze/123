@@ -53,6 +53,8 @@ old5 = 'if(ENVIRONMENT_IS_NODE){process["exit"](status)}else if(ENVIRONMENT_IS_S
 new5 = 'if(false){}else if(ENVIRONMENT_IS_SHELL&&typeof quit==="function"){quit(status)}'
 assert old5 in s, "patch point 5"
 s = s.replace(old5, new5)
+# Persist patches 4 and 5 as well. (Patches 1--3 were written above.)
+open(p, "w").write(s)
 print("vendor worker patched")
 PY
 echo "setup done"

@@ -46,11 +46,11 @@
 3. "全网零人知晓"的严格含义 = "六通道检索范围内（查询集已存档）无先例"；相邻文献全部定位、引用并区分。
 4. empirical_gauss 弱尾流区、Horns Rev 角点案例、4D 边界抖动——全部如实写进论文，没有 cherry-pick。
 
-## 投稿前只剩这三件小事（都已标注在 .tex 里）
+## 投稿前只剩一件小事
 
-1. **填 correspondence 邮箱**：三篇 .tex 的 `\correspondence{Chengze Sun (replace-with-your-email@stu.xjtu.edu.cn)}` 占位符，投稿前换成真实邮箱。
-2. **真 TeX 环境重编一遍**：本机离线编译链（pdftex.js + copernicus_local 垫片）三篇 0 error 已验证；正式投稿前在有 TeX Live 的机器上用真实 copernicus.cls 重编一次（`\documentclass[wes, manuscript]{copernicus}` 已就位，直接编译即可），确认排版无垫片掩盖的问题。
-3. **把 `% TODO` 注释删掉**（就一处，correspondence 上方）。
+- **真 TeX 环境重编一遍**：本机离线编译链（pdftex.js + copernicus_local 垫片）三篇 0 error 已验证；正式投稿前在有 TeX Live 的机器上用真实 copernicus.cls 重编一次（`\documentclass[wes, manuscript]{copernicus}` 已就位，直接编译即可），确认排版无垫片掩盖的问题。
+
+通讯作者邮箱已填写为 `2253710052@stu.xjtu.edu.cn`，三篇稿件中的占位符及 `% TODO` 注释均已删除。
 
 ## 你接下来可以做的事
 
