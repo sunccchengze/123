@@ -23,3 +23,7 @@ Usage:
 
 Output: ../papers/compiled_pdfs/*_local.pdf (validation builds; the submission
 uses copernicus.cls + copernicus.bst on the journal side).
+
+## 2026-08-31 residual-risk notes (do not retry)
+- Real copernicus.cls validation attempted via Tectonic route: `data1.fullyjustified.net`, `mirror.ctan.org`, `ctan.org`, `archive.org`, `raw.githubusercontent.com` all unreachable from this sandbox (only npm registry, pypi, github.com git/gh api reachable). npm hosts third-party tectonic binary wrappers (node-tectonic-linux-x64, @node-latex-compiler/bin-linux-x64) but Tectonic downloads its TeX bundle from the unreachable bundle server, so it cannot work offline here.
+- Conclusion: the article+copernicus_local stub compile is the best achievable local validation. Before submission, recompile with the real copernicus.cls on any machine with TeX Live (single command: `latex paperXX.tex` after `\documentclass[...]{copernicus}` swap-in) — expected to work because all macros used are standard plus the copernicus conveniences, but this check remains OPEN.
