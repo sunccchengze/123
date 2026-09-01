@@ -172,3 +172,40 @@
 ### 9.3 审计结论
 
 FAN-02 增补没有改变“继续发散、但不降低门槛”的研究策略。它保留了一个真实 FSAI 体系的可追踪价值，同时以当前 release 内容阻止一个不可复现的模型/优化故事进入候选阶段。该审计不是投稿审查通过、不是实验复现，也不替代将来对完整数据与前例全文的独立核验。
+
+---
+
+## 10. SPLEEN C1 evidence-and-kill audit：增量清晰度审计
+
+**审计对象：** `SPLEEN_C1_EVIDENCE_KILL_AUDIT_2026-09-01.md`，以及 `README.md`、`CANDIDATE_LEDGER_2026-09-01.md` 的相邻索引更新。
+
+**审计性质：** 已应用仓库本地 `doctoral-research-gatekeeper` 和 `scholarly-clarity-auditor` 的 claim-ledger、citation-adjacency、red-flag 与 adversarial-read 流程。它不是外部 `Supervisor-Skills` 审阅、人工导师认可、同行评审或投稿合规证明。
+
+### 10.1 主张—证据台账
+
+| 保留的表述 | 分类 | 邻近证据 | 不可扩展为 |
+|---|---|---|---|
+| SPLEEN C1 是公开、真实的 high-speed LPT cascade 气动—二次空气相互作用测试体系。 | 一手 record/同行评议 test-case 事实。 | Zenodo v5/PIV records 与 `10.3390/ijtpp10010002`。 | 不等价于完整旋转发动机级、全 MDO 或已下载的数据。 |
+| v5 record 声明 cavity geometry 与 secondary-air-system documentation；v1 CAD 存在可追溯 stagger-angle 版本风险。 | 一手 record metadata 事实。 | v5/v1 Zenodo record/API 链接。 | 不在未读 archive members 前宣称字段、单位、cavity-family 数量或正确的 file-to-run mapping。 |
+| PIV 是同一 C1 的 steady `Cavity Aref`, no-WG, TG on/off 子集，不能自动充作 WG-on/purge 独立验证。 | metadata 范围事实 + 逻辑判断。 | PIV record `10253213` 与 `10.1115/1.4063674`。 | 不把“同项目/同叶栅”写成跨仪器逐试次配对。 |
+| 宽泛的 purge–wake 平均/非定常机理、steady off-design loss 和 ML closure 主张已受直接 SPLEEN 前例约束。 | 原文/abstract scope 事实 + 编辑新颖性判断。 | `10.1115/1.4063878`、`1.4067674`、`10.3390/ijtpp11010014`、`1.4069487`。 | 不声称穷尽一切窄问题；只关闭与前例对象、变量、输出和验证实质相同的宽泛提法。 |
+| SPLEEN 目前仅是 `Question candidate / only G0 passed; G1–G6 incomplete`。 | Gate 结论。 | 缺失的 run map、raw/processed hierarchy、independent holdout、本地 binary manifest 与真正的 decision consequence。 | 不写成失败、无价值，或已经可以投稿的路线。 |
+
+### 10.2 Citation-adjacency 与 red-flag 检查
+
+- 新文件有 16 个唯一外链；均为 Zenodo record/API、DOI、NASA NTRS 或 Mexnext 官方页面。没有将搜索结果 URL 用作引文，也没有把 record-level 描述升级成未读 archive member 的 schema。
+- `10.1115/1.4067674` 的具体条件/输出取自 Crossref/publisher abstract，且文字明确标为该证据范围；`10.1115/1.4069487` 的 data-driven transition/turbulence statement 取自 ASME abstract，不将其未读完整训练细节臆测为事实。
+- 已检查 `首次`、`新颖`、`完成`、`完整`、`证明`、`保证`、`first`、`novel`、`solved`、`guarantee`、`certificate`、`proves`、`exact`、`state of the art`、`all`、`always`、`never`。命中的“首次”仅在被前例关闭的提法中出现；其他词均处于范围限制、未完成状态或本审计方法说明中，没有无条件的正向成果主张。
+- `git diff --check` 已通过。外链 inventory 是语法/来源类别检查，不替代本环境无法完成的 shell TLS 链接可达性检查或下载校验。
+
+### 10.3 对抗性复读和残余风险
+
+| 角色 | 最强反驳 | 审计后处理 |
+|---|---|---|
+| LPT experimentalist | record 表示有 technical documents，何以说条件合同未通过？ | document existence 与 file/run/instrument matching 是不同命题；先取得并审计 README、technical notes 和 binary manifest。 |
+| CFD/ML reviewer | 仍可换一个新网络做 SPLEEN。 | 网络名称不是机制；必须逐项与已含 preliminary data-driven model 的 `1.4069487` 区分，并展示独立决策价值。 |
+| MDO reviewer | purge、loss 和多个工况已是多学科优化。 | 当前最多为 aero–secondary-air operating/measurement space；没有同对象 thermal-solid-life truth 时不得称 full MDO。 |
+| data scientist | PIV、probe、pressure 同属一个项目，合训合理。 | 同项目不证明同试次；缺 matching key 前，合训属于不可审计的 pairing assumption。 |
+| editor | 为何保留而不立即关闭？ | 已关闭的是宽泛命题；仍允许用完整文档来检验是否存在不同、可反驳的窄 decision question。若没有独立 intervention/holdout 或已被相邻文献覆盖，按 audit 的 kill criteria 降为 `Archive only`。 |
+
+**审计结论：** 此增补保持了“继续发散寻找真实耦合体系”与“不降低证据标准”之间的边界。它记录 SPLEEN 的真实公开价值和明确的前例压力，但不把 archive-access 限制、检索歧义或项目同源性误写成数据缺失、文献空白或可投稿 AI-MDO。

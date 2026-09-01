@@ -2,7 +2,7 @@
 
 **状态：`Archive only / 尚未形成 Research candidate`**
 **审查日期：2026-09-01（Asia/Shanghai）**
-**适用范围：郭振东、宋立明老师及课题组公开可核验的研究边界。GE-E3 与 Pak-B 是已审计的首批资源；FAN-02 是另一个已审计的真实离心风机 FSAI 实验线索。现有资源的 `Archive only`/release-incomplete 处置不排除继续以同一 G0–G6 门槛审计其他公开耦合验证体系。**
+**适用范围：郭振东、宋立明老师及课题组公开可核验的研究边界。GE-E3 与 Pak-B 是已审计的首批资源；FAN-02 是已审计的真实离心风机 FSAI 实验线索；SPLEEN C1 是已审计的公开高速度 LPT 气动—二次空气相互作用线索。现有资源的 `Archive only`/release-incomplete/`Question candidate` 处置不排除继续以同一 G0–G6 门槛审计其他公开耦合验证体系。**
 
 这不是论文草稿、投稿承诺或“首创”声明。它是一个否定性但可复查的研究立项记录：在严格区分数据实际包含的变量、已经发表的近邻工作和验证阶梯后，目前不能诚实地把现有两套公开数据拼接为“真实叶片级 AI-MDO”。
 
@@ -16,6 +16,7 @@
 6. **“unpaired data fusion / OT / latent alignment”不是补救。** 不配对资料的 statistical matching 至多能在额外、可辩护约束下给出部分识别集合；MDO 则要求耦合模型与共同设计变量。当前 GE-E3/Pak-B 连这类约束的可验证来源也没有，因此不能让算法臆造跨数据集物理关系。详见 [R9](CANDIDATE_LEDGER_2026-09-01.md#3-已关闭路线) 与 [取证](EVIDENCE_AND_SEARCH_LOG_2026-09-01.md#31-不能用unpaired-data-fusion补出-mdo-耦合)。
 7. **高发散探索已完成首轮图谱，但没有绕过门槛。** 新增的 25 条路线覆盖场接口、损伤路径、临界区切换、随机场、瞬态运行、制造、冷却、拓扑、因果场学习、逆设计和 MDO 数据图；其中仅 5 条仍是待原文级反证的窄线索，2 张卡片带有单学科 `S` 标记（L1 与 `R` 重叠；L3 还需要范围外 paired RANS/URANS 真值），19 条为已关闭、阻断或仅属工具。没有一条同时通过共同耦合对象（G0）和敌对新颖性（G2），故状态仍是 `Archive only`。详见 [高发散候选图谱](CANDIDATE_ATLAS_2026-09-01.md)。
 8. **FAN-02 证明了一个真实 FSAI 测量体系值得继续追踪，却尚未提供可重放的公开测量数据合同。** 当前 Zenodo record 的 `/files` 清单只有 3 个 STEP 与 8 个传感器坐标 TXT，未列出论文所述 PIV、压力、振动、声学时序或共同 run key。它暂列为未来 release/contact-dependent reference，不被误写成已可训练、可独立验证或可优化的 benchmark。详见 [FAN-02 release-content audit](FAN_02_RELEASE_AUDIT_2026-09-01.md)。
+9. **SPLEEN C1 是值得继续审计的真实气动—二次空气 interaction benchmark，但不是当前的完整 MDO 路线。** 主 v5 record 公开声明 cavity/purge/wake、flow/loss/pressure 类观测及 cavity/secondary-air documentation；独立 PIV archive 是 steady reference-cavity/no-wake 子集。已发表 SPLEEN 工作直接覆盖 purge–wake 平均/非定常二次流、steady off-design loss 以及含 preliminary data-driven transition/turbulence model 的 closure 研究。当前仍缺逐试次 pairing、raw/processed hierarchy、独立 holdout 和同一对象的热—结构—寿命真值，故仅为 `Question candidate / only G0 passed`。详见 [SPLEEN C1 evidence-and-kill audit](SPLEEN_C1_EVIDENCE_KILL_AUDIT_2026-09-01.md)。
 
 ## 文件导览
 
@@ -27,6 +28,7 @@
 | [REENTRY_REQUIREMENTS.md](REENTRY_REQUIREMENTS.md) | 若未来获得共同耦合真值后，什么条件下才能重新立项为真实 MDO。 |
 | [F99_W3_MEASUREMENT_VALIDATION_MATRIX_2026-09-01.md](F99_W3_MEASUREMENT_VALIDATION_MATRIX_2026-09-01.md) | Francis-99 Workshop 3 的文档级测量—派生量—不确定性—留出验证矩阵；明确标为 archive-unverified，不能替代 ZIP/schema 审计。 |
 | [FAN_02_RELEASE_AUDIT_2026-09-01.md](FAN_02_RELEASE_AUDIT_2026-09-01.md) | FAN-02 论文级实验覆盖与当前 Zenodo release 文件清单的逐项分离；当前仅能作几何/传感器布局参考。 |
+| [SPLEEN_C1_EVIDENCE_KILL_AUDIT_2026-09-01.md](SPLEEN_C1_EVIDENCE_KILL_AUDIT_2026-09-01.md) | SPLEEN C1 的 record/version/condition contract、直接相邻论文、G0–G6、公开性边界与可杀死的重入条件；当前是 `Question candidate`，不是完整 MDO。 |
 | [SELF_AUDIT_2026-09-01.md](SELF_AUDIT_2026-09-01.md) | 对本轮关闭结论与新增证据审计的主张类别、引文邻接、interaction 假设和对抗性复读；不是投稿审查通过证明。 |
 | [tools/](tools/README.md) | 不依赖网络的 provenance-manifest 工具及临时伪文件测试；供未来合法取得 binary 后先核验版本，不解释物理语义。 |
 

@@ -55,6 +55,7 @@ Pak-B: x_Pak（孔布局 SDF） ──► 端壁表面 Temperature 场
 | FAN-02 enclosed centrifugal fan FSAI release | 直接 [Zenodo `/files` API](https://zenodo.org/api/records/17909944/files) 当前列 3 个 STEP 几何与 8 个传感器位置 TXT；论文另描述真实风机上的流、压、振、声测量。 | 当前清单未列 PIV/HWA、压力/LSV/声学测量、共同 run ID、工况/校准表、结构声学输入、设计干预或独立回算。 | 当前只能作 geometry/sensor-layout reference；不能训练跨模态 FSAI 模型、做 grouped validation 或称为 MDO benchmark。 | `release-content incomplete`；不是对实验或未来 release 的否定。详见 [FAN-02 audit](FAN_02_RELEASE_AUDIT_2026-09-01.md)。 |
 | NASA EEE CFD/重构几何 | 可作为未来公开 HPT 流场参考，并有 `turbo-design` 说明。 | 共同设计变量的 CFD–CHT–FEA–寿命样本闭环；原始硬件的无差异几何。 | 不能自动补齐 GE/Pak 的耦合断边。 | 不在当前限定资源内；未下载。 |
 | U-bend CHT 数据 | 成功 CHT 解、流/固温度字段、28 几何变量及部分网格/求解失败记录。 | 叶片外流、气膜端壁、结构应力/寿命、真实燃机 MDO 标签。 | 未来可作“仿真工作流/失败标签”负载测试；不可外推为叶片 MDO。 | 不在当前限定资源内；未下载。 |
+| SPLEEN C1 high-speed LPT cascade | 主 v5 Zenodo record 公开声明有 flat/cavity、WG-off/WG-on、purge、pressure/flow/loss/unsteady-pressure/quasi-shear 数据，并说明 cavity geometry 与 secondary-air-system documentation；独立 PIV record 公开提供 steady `Cavity Aref`、TG on/off 的 flow/turbulence 子集。 | 同一对象的金属温度/CHT solid、应力/位移、寿命、完整转子级/循环性能；逐文件 `run ↔ instrument ↔ cavity ↔ PMFR ↔ wake` matching key，raw/processed hierarchy、独立留出合同和本地 binary manifest。 | 是真实的气动—二次空气相互作用 benchmark/问题源；最多可在后续严格条件下形成 aero–secondary-air operating/measurement 研究，不能当前称为完整 MDO。直接 SPLEEN 前例已关闭泛化 purge–wake、steady off-design loss 和 ML closure 路线。 | `Question candidate / only G0 passed; G1–G6 incomplete`；详见 [SPLEEN C1 audit](SPLEEN_C1_EVIDENCE_KILL_AUDIT_2026-09-01.md)。 |
 
 ### 2.1 必须先冻结的版本冲突
 
