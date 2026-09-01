@@ -1,0 +1,70 @@
+% Local-build compatibility shim: emulates the Copernicus (WES) class macros on top
+% of the article class, for offline validation compiles. The real submission uses
+% copernicus.cls; this file is never part of the submission.
+\ProvidesPackage{copernicus_local}
+
+% The actual Copernicus class loads amsmath.  The article-based fallback must
+% supply it itself after manuscript source files stop loading redundant packages.
+\RequirePackage{amsmath}
+% The actual Copernicus class also supplies natbib; manuscript source files no
+% longer load it redundantly.
+\RequirePackage{natbib}
+% Likewise, the actual class provides graphicx for manuscript figures.
+\RequirePackage{graphicx}
+
+% Copernicus class commands used by our manuscripts
+\newcommand{\runningtitle}[1]{}
+\newcommand{\runningauthor}[1]{}
+\newcommand{\institution}[2][]{\protect\par\noindent{\small #2}}
+\newcommand{\introduction}{\section{Introduction}}
+\newcommand{\conclusions}{\section{Conclusions}}
+\newcommand{\acknowledgements}{\section*{Acknowledgements}}
+\newcommand{\cormark}[1]{}
+\newcommand{\correspondence}[1]{}
+\newcommand{\authorcontribution}[1]{}
+\newcommand{\competinginterests}[1]{}
+\newcommand{\disclaimer}[1]{}
+\newcommand{\datavailability}[1]{}
+\newcommand{\codeavailability}[1]{}
+\newcommand{\copyrightstatement}[1]{}
+\newcommand{\financialsupport}[1]{}
+\newcommand{\supplement}[1]{}
+\newcommand{\codedataavailability}[1]{}
+\newcommand{\received}[1]{}
+\newcommand{\pubdiscuss}[1]{}
+\newcommand{\revised}[1]{}
+\newcommand{\accepted}[1]{}
+\newcommand{\published}[1]{}
+\newcommand{\firstpage}[1]{}
+\newcommand{\articletype}[1]{}
+% Restores normal section behavior after an appendix in the real class.  It is
+% a no-op here because the fallback only typesets hidden back-matter commands.
+\newcommand{\noappendix}{}
+
+% article's \author takes one argument; Copernicus style uses \author[1]{...}
+\makeatletter
+\renewcommand{\author}[2][]{\gdef\@author{#2}}
+\newcommand{\affil}[2][]{\gdef\@affil{#2}}
+\renewcommand{\maketitle}{%
+  \begin{center}%
+    {\LARGE\bfseries\@title\par}%
+    \vskip 1em%
+    {\large\@author\par}%
+    {\normalsize\@affil\par}%
+    \vskip 2em%
+  \end{center}%
+}
+\makeatother
+
+% amssymb is absent from the embedded texmf; provide the one symbol we use.
+\providecommand{\mathbb}[1]{\mathbf{#1}}
+
+% one-column layout (Copernicus manuscripts are two-column; article is not,
+% which is fine for a validation build)
+\setlength{\textwidth}{6.2in}
+\setlength{\oddsidemargin}{0.2in}
+\setlength{\evensidemargin}{0.2in}
+
+% \doi used by the bibliography entries (natbib 2017 does not define it;
+% Copernicus class does on the journal side)
+\providecommand{\doi}[1]{doi: #1}

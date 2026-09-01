@@ -1,0 +1,67 @@
+{
+  "conditions": {
+    "floris_version": "4.6.6",
+    "wind_speed_m_per_s": 8.0,
+    "wind_direction_deg": 270.0,
+    "turbulence_intensity": 0.06,
+    "layout": "3x3, 5D streamwise by 3D lateral",
+    "profile_deg": [
+      30.0,
+      30.0,
+      30.0,
+      20.0,
+      20.0,
+      20.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "target_protocol": {
+    "count": 9,
+    "lower_fraction_of_observed_ray_gain": 0.05,
+    "upper_fraction_of_observed_ray_gain": 0.99,
+    "description": "Nine equally spaced interior targets from 5% through 99% of the observed ray gain."
+  },
+  "protocol": "Five-node piecewise-linear slice of the browser bilinear proxy, inverted by first-ascending-interval reverse search; evaluated on the same nine targets as table2_tracking.json.",
+  "grid_t": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "grid_power_kW": [
+    8095.147893676136,
+    8535.987008758928,
+    9213.102399033874,
+    9809.738180830815,
+    10041.457351172001
+  ],
+  "targets_kW": [
+    8192.46336655093,
+    8421.154727806694,
+    8649.846089062457,
+    8878.537450318221,
+    9107.228811573987,
+    9335.92017282975,
+    9564.611534085514,
+    9793.302895341278,
+    10021.994256597041
+  ],
+  "errors_kW": [
+    51.89370445068744,
+    47.13327149579163,
+    1.773577168749398,
+    0.8344834626186639,
+    6.964307871510755,
+    20.999961393990816,
+    23.852553471162537,
+    3.5544975158245506,
+    16.627916863568316
+  ],
+  "P0_kW": 8095.147893676136,
+  "Pmax_kW": 10041.457351172001,
+  "max_error_kW": 51.89370445068744,
+  "max_error_pct_of_Pmax": 0.5167945511876381
+}
