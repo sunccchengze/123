@@ -1,0 +1,102 @@
+% Non-submission forensic record. It supersedes an earlier P2 draft and must
+% not be submitted as a Wind Energy Science manuscript.
+% Chengze Sun, School of Energy and Power Engineering, Xi'an Jiaotong University
+
+\documentclass[wes, manuscript]{copernicus}
+
+\begin{document}
+
+\title{Non-submission research record: forensic audit of coordinate-sweep and clustering claims for wake steering}
+\author[1]{Chengze Sun}
+\affil[1]{School of Energy and Power Engineering, Xi'an Jiaotong University, Xi'an, China}
+\runningtitle{Forensic audit of coordinate-sweep claims}
+\runningauthor{Sun}
+\correspondence{Chengze Sun (\texttt{2253710052@stu.xjtu.edu.cn})}
+\received{}
+\pubdiscuss{}
+\revised{}
+\accepted{}
+\published{}
+\firstpage{1}
+
+\maketitle
+
+\begin{abstract}
+This non-submission record supersedes an earlier draft that presented Decoupled Jacobi Sweeps, clustering based on an interaction matrix, and an interaction-energy certificate for wake steering. A code-semantics and prior-art audit found that the proposed evidence did not support those claims. The function labeled DJS mutates its coordinate vector in place: every later one-dimensional search sees earlier updates. It is therefore a cyclic Gauss--Seidel coordinate sweep, not the frozen-state parallel Jacobi method described in the draft. In the archived FLORIS 4.6.6 examples, its first-sweep power differs from a true synchronous implementation by 27.955 kW for a three-turbine chain and 114.569 kW for a 3 by 3 layout, even though the two methods happen to share an integer-grid final state after three sweeps in those selected cases. This coincidence does not establish convergence, parallel execution, or a wall-clock advantage. The claimed certificate also depended on an invalidated P1 derivative envelope: mixed partials sampled at a few states cannot bound the entire yaw box. Finally, wake-graph sparsification, decentralized clustering, and parallel subproblems have direct prior art. The record withdraws the old novelty and guarantee claims, preserves the negative audit, and lists the conditions required before a new algorithmic study could be assessed.
+\end{abstract}
+
+\introduction
+\label{sec:introduction}
+
+This is an archival correction, not a manuscript for peer review. It replaces an earlier P2 draft whose algorithm and benchmark claims must not be submitted or cited as results. The associated P1 interaction claims were independently withdrawn after a model-scope and finite-difference audit. Therefore the former P2 arguments based on a decoupling law, an interaction-energy certificate, or a Jacobi contraction factor have no valid foundation.
+
+The reproducible source, its machine-readable output, and the broader decision record are retained with this research package; their exact locations are listed in the data-availability statement. This document deliberately records a negative finding rather than preserving an attractive but unsupported optimization narrative.
+
+\section{The implementation did not match the named algorithm}
+\label{sec:semantics}
+
+A synchronous Jacobi coordinate method evaluates every coordinate subproblem against a common frozen iterate and then commits all coordinates together. The historical \texttt{djs} function instead sets each selected coordinate immediately in \texttt{ynew}; the search for coordinate $i+1$ consequently uses the value selected for coordinate $i$. That is a cyclic Gauss--Seidel coordinate sweep. It has different semantics and does not perform the claimed parallel one-dimensional searches.
+
+For transparency, the audit implements both update rules with the same integer-degree candidate grid and historical FLORIS conditions. Table~\ref{tab:semantics} gives the first-sweep outcomes. The calculations do not determine a globally optimal yaw vector and are not a fair solver-speed benchmark.
+
+\begin{table}[htbp]
+\caption{Code-semantics check under the historical FLORIS 4.6.6 condition. ``In-place sweep'' reproduces the old code. ``Synchronous Jacobi'' freezes the pre-sweep vector for every coordinate search.}
+\begin{tabular}{lcc}
+\hline
+Layout & In-place sweep power (kW) & Synchronous-Jacobi power (kW) \\
+\hline
+Three-turbine inline chain & 3295.691 & 3267.736 \\
+$3\times3$ layout & 10042.514 & 9927.945 \\
+\hline
+\end{tabular}
+\label{tab:semantics}
+\end{table}
+
+After three sweeps, the two implementations happen to reach the same displayed integer-grid yaw state in these two selected cases. That observation is not a proof of equivalence, descent, convergence, or local linear rate. It also does not measure parallel hardware execution. General parallel-coordinate methods require assumptions and update rules that cannot be imported unchanged into a non-convex, potentially nonsmooth wake objective \citep{wright2015coordinate,richtarik2016parallel,gori2023sensitivity}.
+
+\section{Why certificate and clustering claims are withdrawn}
+\label{sec:certificate}
+
+The previous certificate called a small collection of finite-difference mixed partials a supremum over the full yaw box. It was not such a supremum. The upstream P1 audit additionally shows that the former key mixed-partial sign reversed as the finite-difference step was refined. Hence neither the proposed interaction envelope nor the resulting greedy-gap and per-cluster-loss statements are validated bounds.
+
+A matrix of mixed partials at one point can still be a local diagnostic. Thresholding that matrix does not show that cross-cluster couplings stay below the threshold after yaw changes, across inflow conditions, or under another wake model. The statements that clusters were ``certified'', that DJS was ``provably safe'', and that every observed gap was bracketed by a certificate are withdrawn. The plotted values remain historical outputs, not guarantees.
+
+\section{Prior-art and attribution correction}
+\label{sec:priorart}
+
+The old draft misattributed weighted-graph wake decoupling to Kuo et al.\ \citep{kuo2020wind}; that cited work is a random-search yaw optimizer. Shu et al.\ \citep{shu2022decentralised} use a sparsified wake-directed graph with decentralized optimization. Li et al.\ \citep{li2025wgwd} use weighted-graph wake decoupling with parallel subproblems. Tu et al.\ \citep{tu2026gsr} study generalized serial refinement for large-scale yaw optimization. These publications do not settle the novelty of every future method, but they preclude the former broad first-of-kind claims about decentralized clustering, solver mechanisms, and large-farm yaw optimization.
+
+Gori et al.\ \citep{gori2023sensitivity} show that wake-steering optimization is sensitive to model and algorithm choices. A few static FLORIS cases, a local SLSQP reference, and projected critical-path timing cannot establish a real-time controller or a general speed advantage.
+
+\section{Requirements before an algorithmic study is reopened}
+\label{sec:requirements}
+
+A future P2-like study should not reuse the former claims. At minimum it would need:
+\begin{itemize}
+\item an implementation whose update semantics, synchronization, stopping rule, and parallel execution are explicitly specified and tested;
+\item an algorithm that remains distinct from graph sparsification, weighted-graph decoupling, serial refinement, coordinate search, and other current methods;
+\item matched solver budgets and tolerances, repeated timing runs on stated hardware, varied layouts and wind conditions, uncertainty cases, actuator limits, and load constraints;
+\item a valid theorem with demonstrated global hypotheses, or an honest local numerical diagnostic without the words \emph{certificate} or \emph{guarantee}; and
+\item a new multi-channel novelty audit after those tests exist.
+\end{itemize}
+
+\section{Editorial and authorship boundary}
+\label{sec:editorial}
+
+No field, LES, or wind-tunnel validation was performed for the former algorithmic claims. The earlier prose also received substantive generative-AI assistance in this workflow. Copernicus policy reviewed on 2026-08-31 prohibits using generative AI to create manuscript text or scientific explanations. This record is not eligible for WES submission. The named author would need to independently reconstruct, verify, and write any future submission and satisfy the then-current journal policy.
+
+\conclusions
+\label{sec:conclusions}
+
+The former P2 is withdrawn as a research-paper candidate. Its code used a cyclic coordinate sweep rather than the claimed parallel Jacobi method. Its certificate depended on unsupported global derivative bounds, and its novelty framing omitted or misattributed material prior art. Preserving these facts and the runnable audit is more useful than retaining unsupported performance or guarantee language.
+
+\codedataavailability{The forensic script, JSON output, pinned environment, source files, and status record are retained under \texttt{research/} in \texttt{github.com/sunccchengze/123}. This is not a permanent submission archive or DOI.}
+
+\authorcontribution{The sole named author is responsible for independently checking, rewriting, and deciding whether to use any future research material.}
+\competinginterests{The author declares that no competing interests are present.}
+\acknowledgements{This non-submission record acknowledges the FLORIS developers and authors of the cited work for openly available methods and documentation.}
+
+\bibliographystyle{copernicus}
+\bibliography{refs}
+
+\end{document}

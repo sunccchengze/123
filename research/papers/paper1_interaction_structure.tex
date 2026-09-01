@@ -1,0 +1,116 @@
+% Non-submission forensic record. It supersedes an earlier P1 draft and must
+% not be submitted as a Wind Energy Science manuscript.
+% Chengze Sun, School of Energy and Power Engineering, Xi'an Jiaotong University
+
+\documentclass[wes, manuscript]{copernicus}
+
+\begin{document}
+
+\title{Non-submission research record: forensic audit of interaction-structure claims in a static wake model}
+\author[1]{Chengze Sun}
+\affil[1]{School of Energy and Power Engineering, Xi'an Jiaotong University, Xi'an, China}
+\runningtitle{Forensic audit of interaction-structure claims}
+\runningauthor{Sun}
+\correspondence{Chengze Sun (\texttt{2253710052@stu.xjtu.edu.cn})}
+\received{}
+\pubdiscuss{}
+\revised{}
+\accepted{}
+\published{}
+\firstpage{1}
+
+\maketitle
+
+\begin{abstract}
+This non-submission record supersedes an earlier draft that claimed a complement--substitute decomposition, a decoupling law, and a greedy certificate for yaw optimization. A falsification-oriented audit found that its mathematical scope and numerical evidence did not support those claims. The derivation assumed separable deficit kernels and recovery monotonicity, whereas the FLORIS Gauss--curl hybrid (GCH) model used for numerical illustrations includes yaw-added recovery and secondary steering. In a reproducible two-turbine, laterally offset GCH case, increasing positive upstream yaw from 0 to 5 degrees lowers downstream power by 46.175 kW; recovery monotonicity is therefore not automatic for arbitrary geometry. At the former headline three-turbine point, the mixed finite difference changes from minus 0.215420 kW deg$^{-2}$ at a 5-degree step to plus 0.022315 kW deg$^{-2}$ at a 1-degree step, so the reported phase flip is not a verified local-Hessian result. In addition, sampled derivatives do not establish the box supremum needed by the former interaction-energy bound. The document records the falsifications, withdraws the affected claims, and specifies requirements for any future research. It does not report a new physical law, controller, or submission-ready result.
+\end{abstract}
+
+\introduction
+\label{sec:introduction}
+
+This document is an archival correction, not a research manuscript for peer review. It replaces an earlier P1 draft whose title and abstract suggested that a broadly applicable interaction structure had been established for wake-steering objectives. The earlier draft must not be submitted or cited as a result. The reproducible source, structured output, and fuller decision record are retained with this research record; their exact locations are listed in the data-availability statement.
+
+The distinction matters because a conditional derivative identity for an idealized map is not automatically a property of an engineering wake model. GCH was designed precisely to add yaw-induced recovery and secondary steering to a Gaussian wake description \citep{king2021control}. Those effects are useful for wake-steering studies, but they introduce dependencies that the earlier separable-kernel derivation did not model. Optimizer sensitivity and nonsmooth or discontinuous behavior in engineering wake objectives are also documented in the literature \citep{gori2023sensitivity}. The old text incorrectly treated these issues as harmless changes of magnitude.
+
+\section{Claims withdrawn}
+\label{sec:withdrawn}
+
+\textbf{Model-class statement.} The former derivation took a receiver velocity to be a sum or sum-of-squares combination of kernels $w_{ij}(\gamma_i)$ and assumed $-\partial w_{ij}/\partial\gamma_i\geq0$. That can define a useful conditional mathematical model, but it does not contain GCH as a special case. In GCH, upstream yaw can alter the effective yaw and wake behavior of a downstream turbine through secondary steering \citep{king2021control}. The prior claims that all GCH variants satisfy the decomposition and that secondary steering cannot affect its sign structure are withdrawn.
+
+There was also a formal presentation error. A mixed partial is symmetric, while the old direct-substitution term was written for arbitrary $i\ne j$ using only the indicator $\mathbf{1}\{j\succ i\}$. Any future proposition must either declare an ordered upstream--downstream pair or include both possible directed terms. It must state that analytic yaw derivatives use radians; the old finite-difference diagnostics were reported in kW deg$^{-2}$.
+
+\textbf{Numerical phase claim.} The former complement-to-substitute phase flip in a three-turbine chain was inferred from a central difference with a 5-degree step. That number is not stable under local refinement, as shown in Table~\ref{tab:fd}. It is consequently inappropriate to call it a local Hessian sign, phase boundary, or validation of a continuous derivative formula.
+
+\begin{table}[htbp]
+\caption{Falsification check at the former three-turbine-chain state $(20^\circ,20^\circ,20^\circ)$. Values are central finite-difference diagnostics for the first two yaw coordinates under one FLORIS 4.6.6 GCH condition. They are not derivative bounds.}
+\begin{tabular}{cc}
+\hline
+Difference step & Diagnostic $M_{12}$ (kW deg$^{-2}$) \\
+\hline
+$5^\circ$ & $-0.215420$ \\
+$2.5^\circ$ & $-0.248412$ \\
+$1^\circ$ & $+0.022315$ \\
+$0.5^\circ$ & $+0.022367$ \\
+$0.25^\circ$ & $+0.022381$ \\
+\hline
+\end{tabular}
+\label{tab:fd}
+\end{table}
+
+\textbf{Decoupling and greedy claims.} A selected finite set of Hessian ratios cannot establish a law of decoupling at optima. Likewise, the former interaction-energy expression required a supremum over a yaw box, but the numerical study evaluated a handful of finite-difference samples. Sampling can form a heuristic numerical screen; it cannot certify a global derivative envelope, a greedy optimality gap, a clustering loss, or a contraction factor. The words \emph{theorem}, \emph{law}, \emph{guarantee}, \emph{certificate}, and \emph{provably safe} are therefore withdrawn for the former P1 results.
+
+\section{Reproducible counterexample to an automatic premise}
+\label{sec:counterexample}
+
+The audit uses FLORIS 4.6.6 with the NREL-5MW default input. Inflow is 8 m s$^{-1}$, turbulence intensity is 0.06, wind direction is 270 degrees, and the yaw box is one-sided from 0 to 30 degrees. Two turbines are 5 rotor diameters apart in the streamwise direction; the receiver is offset laterally by $-1D$ and held at zero yaw. Table~\ref{tab:recovery} reports its modeled power as the upstream yaw increases.
+
+\begin{table}[htbp]
+\caption{A laterally offset FLORIS GCH case in which positive upstream yaw moves the wake toward the receiver. This numerical counterexample is scoped to the stated model and geometry; it does not make a claim about all physical wind farms.}
+\begin{tabular}{cc}
+\hline
+Upstream yaw & Downstream modeled power (kW) \\
+\hline
+$0^\circ$ & 1651.808 \\
+$1^\circ$ & 1643.087 \\
+$5^\circ$ & 1605.633 \\
+\hline
+\end{tabular}
+\label{tab:recovery}
+\end{table}
+
+The 0-to-5-degree change is $-46.175$ kW. Thus a positive yaw direction does not by itself establish the recovery-monotonicity premise in an arbitrary layout. This behavior is consistent with the importance of correct versus wrong-way steering in field-model comparisons \citep{fleming2021fixedangles}. It invalidates the former universal/model-family wording, rather than establishing a new empirical law.
+
+\section{Experimental and publishing boundary}
+\label{sec:boundary}
+
+No wind-tunnel, LES, or field experiment was conducted for the old interaction claims. A future experimental outline is neither a completed experiment nor a preregistration; it must not be described as either. Existing wake-steering experiments are valuable context, but they do not validate the withdrawn mixed-partial conclusions. For example, fixed-angle field tests were designed to evaluate model behavior under both beneficial and detrimental steering conditions \citep{fleming2021fixedangles}.
+
+The former draft received substantive assistance from a generative AI system in this workflow. Copernicus policy reviewed on 2026-08-31 prohibits using generative AI to create manuscript text or scientific explanations. Neither metadata edits nor an author declaration can convert this record into a WES submission. The named author would need to independently reconstruct, check, and write any future manuscript under the then-current policy.
+
+\section{Requirements before reopening the topic}
+\label{sec:requirements}
+
+A future P1-like study would need all of the following before it could be evaluated as a research-paper candidate:
+\begin{itemize}
+\item a correctly stated and independently checked theorem for an explicit model, including angle units, pair ordering, differentiability, and the exact conditions that imply any sign result;
+\item either analytic derivatives, automatic differentiation with demonstrated regularity, or validated numerical enclosures before any derivative-sign or global-bound claim;
+\item predeclared tests across layouts, yaw signs, inflows, uncertainty, model classes, and finite-difference refinement, with counterexamples retained;
+\item a clear separation between a conditional model proposition and behavior observed in GCH, LES, wind-tunnel, or field data; and
+\item a fresh multi-channel novelty audit after a distinct and validated contribution exists.
+\end{itemize}
+
+\conclusions
+\label{sec:conclusions}
+
+The earlier P1 claims are withdrawn because their scope, numerical stability, and evidence level did not support them. The retained materials make the failure reproducible: an automatic recovery-monotonicity premise fails in an allowed FLORIS geometry, a central mixed difference reverses sign under refinement at the old headline state, and finite samples do not create a global certificate. This is a non-submission forensic record, not evidence for a new interaction law or an optimizer.
+
+\codedataavailability{The falsification script, machine-readable JSON record, pinned environment, and this source are in \texttt{research/ws\_submodularity/} and \texttt{research/} of \texttt{github.com/sunccchengze/123}. A future submission would require a permanent, author-reviewed archive and DOI.}
+
+\authorcontribution{The sole named author is responsible for independently checking, rewriting, and deciding whether to use any future research material.}
+\competinginterests{The author declares that no competing interests are present.}
+\acknowledgements{This non-submission record acknowledges the FLORIS developers and the authors of the cited work for openly available methods and documentation.}
+
+\bibliographystyle{copernicus}
+\bibliography{refs}
+
+\end{document}
