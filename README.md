@@ -1,1 +1,5 @@
 # 123
+
+This repository contains archived wake-steering research materials, current turbomachinery-MDO evidence audits, reproducibility scripts, and forensic audit records.
+
+> **Current status (2026-09-01):** P1 and P2 are non-submission forensic records, and P3 is a narrow static benchmark record. None is currently a Wind Energy Science submission candidate. The independent impact review remains a submission **no-go**; the broad C0 route was closed after direct prior-art review and is not a result or future paper plan. See [`research/SUMMARY.md`](research/SUMMARY.md), [`research/RESEARCH_IMPACT_ASSESSMENT_2026-09-01.md`](research/RESEARCH_IMPACT_ASSESSMENT_2026-09-01.md), [`research/P1_P2_FORENSIC_STATUS.md`](research/P1_P2_FORENSIC_STATUS.md), and [`research/CLAIM_LEDGER_2026-08-31.md`](research/CLAIM_LEDGER_2026-08-31.md) before relying on any figures, caches, or paper sources. The separate turbomachinery inquiry is also an evidence audit rather than a submission project; its current public-data gate, including FAN-02, is documented in [`research/turbomachinery_mdo/README.md`](research/turbomachinery_mdo/README.md).
