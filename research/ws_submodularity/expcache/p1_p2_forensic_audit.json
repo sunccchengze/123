@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "purpose": "Forensic falsification audit for archived P1/P2 claims; not a performance benchmark.",
+  "environment": {
+    "floris_version": "4.6.6",
+    "wind_speed_m_per_s": 8.0,
+    "wind_direction_deg": 270.0,
+    "turbulence_intensity": 0.06,
+    "turbine": "NREL-5MW from FLORIS default_inputs.yaml",
+    "yaw_box_deg": [
+      0.0,
+      30.0
+    ]
+  },
+  "recovery_monotonicity_counterexample": {
+    "layout": {
+      "two_turbines": true,
+      "streamwise_spacing_D": 5.0,
+      "receiver_lateral_offset_D": -1.0
+    },
+    "upstream_yaw_deg": [
+      0.0,
+      1.0,
+      5.0
+    ],
+    "per_turbine_power_kW": {
+      "0": [
+        1753.954459179171,
+        1651.8079939296874
+      ],
+      "1": [
+        1753.45666434072,
+        1643.087305443959
+      ],
+      "5": [
+        1741.5086722008248,
+        1605.6330094245745
+      ]
+    },
+    "downstream_power_kW": {
+      "0": 1651.8079939296874,
+      "1": 1643.087305443959,
+      "5": 1605.6330094245745
+    },
+    "downstream_change_0_to_1deg_kW": -8.720688485728488,
+    "downstream_change_0_to_5deg_kW": -46.17498450511289,
+    "interpretation": "At this laterally offset receiver, positive upstream yaw lowers downstream power. Thus recovery monotonicity is not automatic for arbitrary layouts or a one-sided yaw box."
+  },
+  "finite_difference_stability": {
+    "layout": "three-turbine inline chain at 5D spacing",
+    "base_yaw_deg": [
+      20.0,
+      20.0,
+      20.0
+    ],
+    "pair_zero_based": [
+      0,
+      1
+    ],
+    "central_mixed_partial_kW_per_deg2_by_step_deg": {
+      "5": -0.2154202323329264,
+      "2.5": -0.24841161399326667,
+      "1": 0.022314897747605755,
+      "0.5": 0.022367487986230117,
+      "0.25": 0.022380702816008125
+    },
+    "coarse_step_sign": "negative",
+    "one_degree_step_sign": "positive",
+    "interpretation": "The h=5 degree and h=1 degree diagnostics have opposite signs at this state. The coarse difference cannot be reported as a verified local Hessian sign or phase flip."
+  },
+  "coordinate_update_semantics": {
+    "historical_source": "exp_djs.py:djs",
+    "historical_semantics": "Each coordinate search evaluates and mutates ynew after preceding coordinates have changed; this is an in-place cyclic (Gauss--Seidel) coordinate sweep, not a frozen-state Jacobi update.",
+    "comparison": {
+      "three_turbine_chain": {
+        "layout": {
+          "layout_x_m": [
+            0.0,
+            630.0,
+            1260.0
+          ],
+          "layout_y_m": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "historical_in_place_coordinate_sweep": {
+          "power_kW": [
+            2697.0653144641383,
+            3295.690826125544,
+            3299.2322201260213,
+            3299.2322201260213
+          ],
+          "increments_kW": [
+            598.6255116614057,
+            3.5413940004773394,
+            0.0
+          ],
+          "yaw_states_deg": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              28.0,
+              23.0,
+              0.0
+            ],
+            [
+              30.0,
+              23.0,
+              0.0
+            ],
+            [
+              30.0,
+              23.0,
+              0.0
+            ]
+          ]
+        },
+        "synchronous_jacobi_coordinate_sweep": {
+          "power_kW": [
+            2697.0653144641383,
+            3267.7359527366243,
+            3299.2322201260213,
+            3299.2322201260213
+          ],
+          "increments_kW": [
+            570.670638272486,
+            31.496267389396962,
+            0.0
+          ],
+          "yaw_states_deg": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              28.0,
+              30.0,
+              0.0
+            ],
+            [
+              30.0,
+              23.0,
+              0.0
+            ],
+            [
+              30.0,
+              23.0,
+              0.0
+            ]
+          ]
+        },
+        "final_states_equal_after_three_sweeps": true
+      },
+      "three_by_three": {
+        "layout": {
+          "layout_x_m": [
+            0.0,
+            0.0,
+            0.0,
+            630.0,
+            630.0,
+            630.0,
+            1260.0,
+            1260.0,
+            1260.0
+          ],
+          "layout_y_m": [
+            -378.0,
+            0.0,
+            378.0,
+            -378.0,
+            0.0,
+            378.0,
+            -378.0,
+            0.0,
+            378.0
+          ]
+        },
+        "historical_in_place_coordinate_sweep": {
+          "power_kW": [
+            8095.147893676134,
+            10042.513849811425,
+            10047.727336620062,
+            10047.727336620062
+          ],
+          "increments_kW": [
+            1947.3659561352906,
+            5.213486808637754,
+            0.0
+          ],
+          "yaw_states_deg": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              29.0,
+              28.0,
+              28.0,
+              22.0,
+              22.0,
+              21.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              30.0,
+              30.0,
+              29.0,
+              22.0,
+              22.0,
+              21.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              30.0,
+              30.0,
+              29.0,
+              22.0,
+              22.0,
+              21.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        },
+        "synchronous_jacobi_coordinate_sweep": {
+          "power_kW": [
+            8095.147893676134,
+            9927.944934886495,
+            10047.14804793412,
+            10047.727336620062
+          ],
+          "increments_kW": [
+            1832.7970412103605,
+            119.20311304762618,
+            0.5792886859417195
+          ],
+          "yaw_states_deg": [
+            [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              29.0,
+              28.0,
+              28.0,
+              30.0,
+              30.0,
+              30.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              30.0,
+              30.0,
+              30.0,
+              22.0,
+              21.0,
+              21.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              30.0,
+              30.0,
+              29.0,
+              22.0,
+              22.0,
+              21.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        },
+        "final_states_equal_after_three_sweeps": true
+      }
+    },
+    "interpretation": "The comparison is a code-semantics check only. It neither proves convergence nor supplies a parallel wall-clock result for either method."
+  },
+  "scope": "All values are deterministic outputs of one FLORIS engineering-model configuration. They demonstrate that the broad P1/P2 assertions need withdrawal or a new validation programme; they do not establish a physical counterexample for real wind farms."
+}

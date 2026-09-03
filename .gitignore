@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+*.npz
+*.npy
+*.mat
+*.log
+node_modules/
+research/tools/latex_wasm/vendor/

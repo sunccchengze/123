@@ -1,0 +1,95 @@
+2026-08-21	-	arena/01a01ed2-repo	9552fd48	FOLLOW US 区微信公众号「去关注」按钮改指《社长团介绍》最新推文
+2026-08-05	-	arena/019fd1e3-repo	f3e1485a	fix: 修复暑期视频“网络不太顺畅”误报（三级源回退）
+2026-08-06	-	arena/019fd4c9-repo	1924d8f9	fix: 微信端荣誉视频无法播放（同步手势播放）+ B站iframe加载提示
+2026-08-06	-	arena/019fd67b-repo	f9ad4c3d	fix: 移动统一页面背景.jpg 到 public/images/页面背景/ 文件夹
+2026-08-06	-	arena/019fd68a-repo	4c35a10c	fix: 抠除小鹰三张新图白底，转透明底（边缘连通，保留头部白色）
+2026-08-08	-	arena/019fe0bb-repo	f1c0f90f	docs: add WORK_PROGRESS_ANALYSIS 2026-08-08 (branch copy + skill mirro
+2026-08-10	-	arena/019fe9a2-repo	8bfabc3e	fix(ci): Add .node-version and .nvmrc to force Node.js 22 environment
+2026-08-11	-	arena/019fec6b-repo	ef84d2c5	我帮你压缩了照片
+2026-08-11	-	arena/019feef8-repo	82458ba2	fix: 恢复高清原图并实现高保真提速（WebP响应式+LQIP秒开）
+2026-08-12	-	arena/019fef55-repo	3f91531e	陕博换照片
+2026-08-20	-	arena/019ff697-repo	837116e2	fix: update leadership and functional team article links
+2026-08-07	-	main	0c4c5d2a	Add files via upload
+2026-05-17	-0517	main	87a336aa	Add files via upload
+2026-08-30	-SKILL-	arena/01a048e7-skill	5bb83bca	Final deliverable: GROWTH_ROADMAP.md - 36-skill growth curriculum summ
+2026-08-16	-SKILL-	arena/01a0095c-skill	3df5b096	merge: sync Nuwa distillations from 019ffbe9
+2026-08-16	-SKILL-	arena/019ffbe9-skill	f3149a06	feat(nuwa): add modern application book audits
+2026-08-12	-SKILL-	main	a5cbce0f	Initial commit
+2026-05-30	0530-planck	main	8acde3dd	Add files via upload
+2026-06-12	06112cosmosagentmode	main	c615af40	Add files via upload
+2026-08-28	0824-2026	arena/01a03e22-0824-2026	abe318c8	第2任交接：全量评审报告(docs/07) + HANDOFF + twin 全部源码入库 + skills 技能包
+2026-08-24	0824-2026	arena/01a032e4-0824-2026	189db37e	R3 超真实化：NREL 5MW 参数化整机替换全息小棍（docs/06 资产调研为凭）
+2026-08-30	0824-2026	arena/01a048be-0824-2026	3d93950f	round-21: 晶面侧壁按法线朝上程度压暗(0.30)，消除起伏处亮侧面
+2026-08-30	0824-2026	arena/01a051ab-0824-2026	cb0b8e1d	Add new file with a single line of content
+2026-08-30	0824-2026	arena/01a052e8-0824-2026	6b3f2165	fix: stabilize intro camera startup
+2026-08-30	0824-2026	arena/01a052ed-0824-2026	73dc3a40	fix(camera): 彻底消除开场运镜抖动与摇晃，实现丝滑连续平稳俯冲
+2026-08-29	0824-2026	arena/01a0489b-0824-2026	e11dbd41	docs/07 全清单闭环：P0/P1/P2 修复 + 运行时验证 + before/after 证据
+2026-08-30	0824-2026	arena/01a0529f-0824-2026	658614d6	fix(intro): freeze adaptive quality during opening to remove two black
+2026-08-26	0824-2026	arena/01a03669-0824-2026	f78c92ad	fix: keep hologram fill transparent with white edges
+2026-08-28	0824-2026	arena/01a04884-0824-2026	13d02ccc	docs: add honest handoff for next implementer
+2026-08-28	0824-2026	main	bfa58ca2	Merge pull request #2 from sunccchengze/arena/01a04884-0824-2026
+2026-08-30	123	arena/01a050e3-123	aaff8076	docs: archive GitHub exploration and recommendation protocol
+2026-08-28	123	main	2bb4636a	Initial commit
+2026-05-24	20260524	main	e2657373	Add files via upload
+2026-06-06	202606060606AI	main	c995c02f	Add files via upload
+2026-07-04	ai	main	5e4da9c6	Update route.ts
+2026-07-04	claude-cpt	main	ada60b7f	Add files via upload
+2026-06-01	dawu-6.1	main	4f3c7c07	Add files via upload
+2026-06-01	gaoshu-6.1	main	b5753932	Add files via upload
+2026-04-20	Goooodbye_s-g	main	e7820817	Add files via upload
+2026-04-20	hogwarts-sorting-hat-quiz	cloudflare/workers-autoconfig	2ea9591b	Add Cloudflare Workers configuration
+2026-04-20	hogwarts-sorting-hat-quiz	main	2d039013	Update App.tsx
+2026-04-23	IELTS20260423scz	main	7ced0135	Add files via upload
+2026-07-03	liangji	main	5102faa4	Add files via upload
+2026-04-21	physics-exam-1	main	24e9fea0	Add files via upload
+2026-04-21	physics-exam-2	main	8737bb6f	Add files via upload
+2026-05-10	ryh20260510	main	e6e96d7d	Update index.html
+2026-05-02	rzyz-2026-gaokaojiayou	main	d01338c7	Delete galaxy-themed-blessing-webpage directory
+2026-06-01	sectionA-cet6	main	06832f55	Add files via upload
+2026-08-29	sucheng	arena/01a04ad1-sucheng	b0f6d632	1
+2026-08-29	sucheng	arena/01a04c69-sucheng	5699f8bc	第二版视觉审核：A级9条(批注残留11处/P18贴图表/P14领导照/P13署名/P12竞品造数/400℃口径/P3画布外图/P22地图/P
+2026-08-29	sucheng	arena/01a04d04-sucheng	f2e081b9	追加极简交卷包：7处必改+3条答辩兜底话术+P12双表成品
+2026-08-27	sucheng	arena/01a0432c-sucheng	fcfab545	docs: 二轮评审27页方案（官方依据复核/A级新发现：450FC30数据口径、UT252P矛盾、300亿口径/+5页逐页设计/答辩弹药）
+2026-08-27	sucheng	arena/01a0433d-sucheng	08c1d666	08277终版微调清单：3硬伤（双百亿矛盾/画布外手记残留/期别打架）+6等长微调+答辩弹药+终版流程
+2026-08-27	sucheng	arena/01a04185-sucheng	4d414f72	docs: 08277终验收版——六项全过，08277.pdf入库
+2026-08-12	sucheng	arena/019feea4-sucheng	39b71176	记忆更新：上传附件文件系统不可读的应对方式
+2026-08-27	sucheng	main	2718a755	Create 0827.1.pdf
+2026-07-31	turbine-blade-ai-platform	arena/019fb8ff-turbine-blade-ai-platform	67e2ae7a	docs: add upgrade checklist
+2026-07-31	turbine-blade-ai-platform	arena/019fb74d-turbine-blade-ai-platform	e23b7692	Day 18: update README status line to Day 18 (bilingual UI complete)
+2026-07-31	turbine-blade-ai-platform	arena/019fb618-turbine-blade-ai-platform	3aff43fc	Day 17 (part 2): full bilingual CN-EN pass on Predict/Optimize/UQ page
+2026-07-31	turbine-blade-ai-platform	arena/019fb778-turbine-blade-ai-platform	08e22b54	Docs: sync lint baseline to 0 warnings after final review
+2026-08-01	turbine-blade-ai-platform	arena/019fbdff-turbine-blade-ai-platform	e6b0e5d1	fix: split merged requirement line in requirements.txt
+2026-08-03	turbine-blade-ai-platform	arena/019fc539-turbine-blade-ai-platform	9cdeb370	D40: 讲座PPT图——生成4张深色主题图（ablation对照实验/pipeline链路/mesh-pixel网格/plaid CSV预
+2026-08-09	turbine-blade-ai-platform	arena/019fe072-turbine-blade-ai-platform	f47b2686	fix: complete light theme surface contrast
+2026-08-12	turbine-blade-ai-platform	arena/019feb03-turbine-blade-ai-platform	eacef427	docs: 完美终结当前会话，升级 HANDOFF.md 至 v8 终极版并全量对齐所有记忆与资产
+2026-08-14	turbine-blade-ai-platform	arena/019ff6c7-turbine-blade-ai-platform	b5d93614	docs: changelog A4 — all 12 units thickened
+2026-08-15	turbine-blade-ai-platform	arena/019ffee7-turbine-blade-ai-platform	a8d0fe1a	A7: plain Unicode math across textbook — zero LaTeX in all reader-faci
+2026-08-08	turbine-blade-ai-platform	main	17e78a57	Add files via upload
+2026-08-13	tushupdf	arena/019ff894-tushupdf	9012596f	Add XJTU course-textbook portal and student VPN steps
+2026-08-13	tushupdf	main	836ccb38	Initial commit
+2026-08-12	wendang11	main	c239a4f8	Merge pull request #2 from sunccchengze/arena/019ff16d-wendang11
+2026-08-24	wind_farm_viz	arena/01a012f1-wind-farm-viz	e9ee8b91	Add files via upload
+2026-08-08	wind_farm_viz	arena/019fcc85-wind-farm-viz	6e654b8b	Add files via upload
+2026-08-08	wind_farm_viz	arena/019fd504-wind-farm-viz	fe1dc480	docs: 添加 HANDOFF 交接文档（供下一 agent 接手）
+2026-08-09	wind_farm_viz	arena/019fe0c0-wind-farm-viz	b67b7fc2	Muted 500/600级配色+CSS语法修复: 全部400级亮色→500/600级柔色, 消除Etransition/bAorder等错
+2026-08-10	wind_farm_viz	arena/019fe42f-wind-farm-viz	a259d57a	docs: streamline handoff instructions, remove confusing jargon, and cl
+2026-08-10	wind_farm_viz	arena/019feacd-wind-farm-viz	edb5711a	docs(learnings): 冻结复核落印——工作区/远端/进程三方零漂移确认
+2026-08-11	wind_farm_viz	arena/019feb53-wind-farm-viz	cf554c9a	fix(site): 根据5大视觉及信噪比诊断精制尾流分析页(合并控制台/去色彩泛滥/下标校对)
+2026-08-13	wind_farm_viz	arena/019ff8d6-wind-farm-viz	9c2a18a2	chore(skills): 装载 019ff854 通用技能底座并内化到本项目路由
+2026-08-18	wind_farm_viz	arena/019ff8da-wind-farm-viz	256a7490	chore(handoff): 收尾回退尾流页至01759b13科研可用版 — 修复Vercel重塑后空白+品牌文案外露，动态置顶Natur
+2026-08-08	wind_farm_viz	main	35f76a83	1
+2025-12-15	wode	arena/019ff148-wode	9747aaf5	Initial commit
+2025-12-15	wode	main	9747aaf5	Initial commit
+2026-06-02	yiming	main	300309f7	Add files via upload
+2026-06-02	yiming-wish	main	fdd819a1	Delete 11
+2026-06-02	yiming-wish	src	bc458cd5	Add wrangler.toml configuration file
+2026-06-02	yimingshengri	main	392d7cf2	Add files via upload
+2026-08-17	zixue2026	arena/01a00ee0-zixue2026	aed83cf9	总调度：大学物理状态更新v2
+2026-08-21	zixue2026	arena/01a00ee1-zixue2026	c9d03a67	校准工程力学交接进度状态
+2026-08-17	zixue2026	arena/01a00ee2-zixue2026	16937556	数理方程开局：12课题路线图+记忆系统+大师天团4位+资料提取+课题01开题
+2026-08-17	zixue2026	arena/01a00ff1-zixue2026	88426a3b	大物开局：路线图18课题定稿+资料映射+memory骨架+大师天团4人+课题01开题
+2026-08-24	zixue2026	arena/01a02f7b-zixue2026	0100be54	认领手写误读并完成电化学归档
+2026-08-30	zixue2026	arena/01a032eb-zixue2026	7540202a	大排查启动：用户反馈前期掌握差强化不够，暂停新课，20题全科诊断分4批，批1/4已发
+2026-08-24	zixue2026	arena/01a0236e-zixue2026	489c4790	记录手写拍照学习方式与几何巩固进度
+2026-08-25	zixue2026	arena/01a02459-zixue2026	876bd95c	工程力学：git 注意节改为 git-sync.py 一命令收口；会话记录补分支梳理与 tag
+2026-08-17	zixue2026	main	1c101771	Delete A0 directory

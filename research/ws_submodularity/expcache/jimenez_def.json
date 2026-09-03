@@ -1,0 +1,18 @@
+{
+ "model": "gauss velocity + jimenez deflection",
+ "h": 5.0,
+ "od0": 0.302,
+ "odst": 0.037,
+ "yopt": [
+  28.2,
+  27.2,
+  26.8,
+  19.6,
+  18.5,
+  18.5,
+  0,
+  0,
+  0
+ ],
+ "gain_pct": 38.77
+}
